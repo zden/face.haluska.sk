@@ -1,0 +1,796 @@
+<html lang="en">
+<head>
+	<meta charset=utf-8 />
+	<meta name="viewport" content="width=620" />
+	<title>FACE FILTER</title>
+	<meta property="title" content="Geometric Photo Filter"/>
+	<meta property="og:title" content="Geometric Photo Filter"/>
+	<meta property="og:type" content="website"/>
+	<meta property="og:image" content="http://face.haluska.sk/face1.png"/>
+	<meta property="og:image" content="http://face.haluska.sk/face2.png"/>
+	<meta property="og:image" content="http://face.haluska.sk/face3.png"/>
+	<meta property="og:image" content="http://face.haluska.sk/face4.png"/>
+	<meta property="og:image" content="http://face.haluska.sk/face5.png"/>
+	<meta property="og:description" content="Photo filter based on random lookup for neighbouring pixels with similar color and shading via drawing basic geometric primitives."/>
+	<meta property="og:url" content="http://face.haluska.sk" />
+	<link rel="image_src" href="http://face1.png" / >
+</head>
+<body background="bg.gif">
+<header>
+<table width="100%">
+<tr><td class=title width=100%>GEOMETRIC <fx style="color:#804000">//</fx> PHOTO FILTER <fx style="color:#F08000">/  /    /</fx></td><td align=right>©&nbsp;2014&nbsp;<a href="http://Zd3N.com">Zd3N.com</a>&nbsp;<a href="http://satori.sk">Satori&nbsp;SK</a>&nbsp;|&nbsp;source<br>::&nbsp;ver.&nbsp;1.0&nbsp;/&nbsp;Jun/13/2014&nbsp;::</td></tr>
+</table>
+</header>
+<style>
+
+input {
+	color: #000000;
+	font-family: "Verdana";
+	font-size: 9pt;
+	font-weight: normal;
+	text-decoration: none;
+}
+
+td {
+	color: #000000;
+	font-family: "Verdana";
+	font-size: 9pt;
+	font-weight: normal;
+	text-decoration: none;
+	padding-left:8px;
+}
+
+p.drop {
+	color: #ACD8F8;
+	font-family: "Verdana";
+	font-size: 20pt;
+	font-weight: normal;
+	text-decoration: none;
+}
+
+td.title {
+	color: #808080;
+	font-family: "Verdana";
+	font-size: 20pt;
+	font-weight: normal;
+	text-decoration: none;
+}
+
+#holder { border: 2px dashed #ccc; border-color: #BBE0FA; width: 640px; height: 640px; margin: 20px auto; position: absolute; top: 48px; left: 440px; }
+#holder.hover { border: 2px dashed #333; }
+#holder.paint { border: 2px; }
+
+a {
+	color: #206080;
+	font-family: "Verdana";
+	font-size: 9pt;
+	font-weight: normal;
+	text-decoration: none;
+}
+
+a:hover {
+	color: #4080B0;
+	background-color: #FFE0A0;
+	font-family: "Verdana";
+	font-weight: normal;
+	text-decoration: none;
+}
+
+</style>
+<article>
+  <div id="UI" style="position: absolute; top: 40px; left: 0px;">
+  <p>
+	<table background="bgui.gif" width=220>
+	<tr><td>
+	<table width=420><tr><td width=210><input style="width: 130px;" id='save' type='button' value="&#9658; SAVE PAINTING" onclick=button_change(this) /></td>
+	<td width=210 align=right><input style="width: 80px;" id='play' type='button' value="&#9658; PAUSE" onclick=button_change(this) />&nbsp;&nbsp;&nbsp;</td></tr>
+	</table>
+		<table><tr><td width=150>Shader:</td><td>
+		<select id='shader' onChange=combo_change(this)>
+			<option value=66>Line</option>
+			<option>Triangle</option>
+			<option>Rectangle</option>
+			<option>Circle</option>
+			<option>Line Walker</option>
+		</select></td><td></td>
+		</tr>
+	<tr><td>Filled Shader:</td><td><input id="shader_filled" type="checkbox" value="0" onchange=value_change(this) /></td><td></td><td></td><tr>
+	<tr><td>Alfa:</td><td><input id="alfa" type="range" min="0" max="100" value="100" onchange=value_change(this) /></td><td><input style="width:64px;" id="alfa_num" type="number" min="0" max="100" value="100" onchange=value_change(this.id) /></td></tr>	
+	<tr><td bgcolor="#EED000" colspan=4></td></tr>
+	<tr><td>Start Distance:</td><td><input id="pixel_start_dist" type="range" min="1" max="256" value="8" onchange=value_change(this) /></td><td><input style="width:64px;" id="pixel_start_dist_num" type="number" onchange=value_change(this) value="8" /></td></tr>
+	<tr><td>Max Distance:</td><td><input id="pixel_dist" type="range" min="1" max="256" value="64" onchange=value_change(this) /></td><td><input style="width:64px;" id="pixel_dist_num" type="number" onchange=value_change(this) value="64" /></td></tr>
+	<tr><td>Color Similiarity:</td><td><input id="pixel_similiar" type="range" min="1" max="128" value="1" onchange=value_change(this) /></td><td><input style="width:64px;" id="pixel_similiar_num" type="number" min="1" max="128" value="1" onchange=value_change(this) /></td></tr>
+	<tr><td colspan=4><fx style="color:#808080; font-size: 8pt;">Value represents maximal difference between R/G/B components.<br>The lower the value, the more exact color you seek.</fx>
+	<tr><td bgcolor="#EED800" colspan=4></td></tr>
+	<tr><td>Start Angle:</td><td><input id="angle_start" type="range" min="0" max="359" value="0" onchange=value_change(this) /></td><td><input style="width:64px;" id="angle_start_num" type="number" min="0" max="359" value="0" onchange=value_change(this) /></td></tr>
+	<tr><td>Start Angle Randomize:</td><td><input id="angle_start_rand" type="range" min="0" max="359" value="359" onchange=value_change(this) /></td><td><input style="width:64px;" id="angle_start_rand_num" type="number" min="0" max="359" value="356" onchange=value_change(this) /></td></tr>
+	<tr><td>Arc Length:</td><td><input id="arc_length" type="range" min="0" max="360" value="360" onchange=value_change(this) /></td><td><input style="width:64px;" id="arc_length_num" type="number" min="0" max="360" value="360" onchange=value_change(this) /></td></tr>
+	<tr><td bgcolor="#EEE000" colspan=4></td></tr>
+	<tr><td>Fade by Distance:</td><td><input id="dist_fade" type="range" min="0" max="100" value="100" onchange=value_change(this) /></td><td><input style="width:64px;" id="dist_fade_num" type="number" min="0" max="100" value="100" onchange=value_change(this) /></td></tr>
+	<tr><td>Inverted Fade:</td><td><input id="inverted_fade" type="checkbox" value="0" onchange=value_change(this) /></td><td></td><td></td><tr>
+	<tr><td bgcolor="#EEE800" colspan=4></td></tr>
+	<tr><td>Steps per Frame: <fx style="color:#F02020; font-size: 8pt;">*</fx></td><td><input id="steps" type="range" min="1" max="100" value="10" onchange=value_change(this) /></td><td><input style="width:64px;" id="steps_num" type="number" min="1" max="100" value="10" onchange=value_change(this) /></td></tr>
+	<tr><td>Max Steps per Walk: <fx style="color:#F02020; font-size: 8pt;">*</fx></td><td><input id="walk_steps" type="range" min="2" max="100" value="10" onchange=value_change(this) /></td><td><input style="width:64px;" id="walk_steps_num" type="number" min="2" max="100" value="10" onchange=value_change(this) /></td></tr>
+	<tr><td colspan=4><fx style="color:#F02020; font-size: 8pt;">* Careful with steps parameters. Higher values on a slow computer will almost certain brick your browser.</fx>
+	<tr><td bgcolor="#D0D0D0" colspan=4></td></tr>
+	<tr><td><input style="width: 140px;" id='orig' type='button' value="SHOW ORIGINAL" onclick=button_change(this) /></td><td><input style="width: 85px;" id='restart' type='button' value="&#8857; RESTART" onclick=button_change(this) /></td><td></td></tr>
+	<tr><td width=150>Start with:</td><td>
+	<select id='start' onChange=combo_change(this)>
+		<option>White Canvas</option>
+		<option>Black Canvas</option>
+	</td><td></td></tr>
+	<tr><td bgcolor="#D0D0D0" colspan=4></td></tr>
+	</table>
+	<tr><td>
+	<table><tr><td style="text-align: justify;">
+	<b>Usage:</b><br><desc style="color:#505070">Drag and drop some image and work with the values in real-time to make your generative version. You have basic geometric primitives to choose from and full real-time parametric control over the painting algorithm. Use Pause/Play to set parameters comfortably, have a look at original picture for comparison, and when you are satisfied with your creation, you can save it to a new browser tab. This filter performs best on high detailed portrait pictures. If you want to start on another picture just drop it onto the drawing area.</desc><p>
+	<b>About:</b><br><desc style="color:#505070">
+	Photo filter based on random lookup for neighbouring pixels with similar color property and applying found pixels' positions and color for shading via drawing basic geometric primitives.
+	<br><br>Seek for the similar pixel is started from the center radially. You can set starting and ending seek distance as well range of the circle sector. Alpha is calculated according to the distance of found pixels. "Line Walk" is a special mode when line primitive repeats seek process multiple times for the same color starting again from the newly found pixel.</desc><p>
+	<b>Future:</b><br><desc style="color:#505070">If you like the filter share your interest. I have a couple of ideas to progress this further. Some of them are about the new parameters to control colors or extend Walk feature to other primitives. I am especially interested to implement ability to record all your actions with feature to reapply these steps on another picture which gives a possibility for motion video application.</desc><p>
+	</td></tr>
+	<tr><td>
+	<div id="social" style="position: relative; top: 16; visibility: visible; z-index: 99">
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=160423367472864";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+<div class="fb-like" data-href="http://face.haluska.sk" data-layout="box_count" data-action="like" data-show-faces="true" data-share="true"></div>
+&nbsp;
+<a href="https://twitter.com/share" class="twitter-share-button" data-lang="en" data-count="vertical" data-url="http://face.haluska.sk">Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+&nbsp;
+<!-- Place this tag where you want the +1 button to render. -->
+<div class="g-plusone" data-size="tall" data-href="http://face.haluska.sk"></div>
+
+<!-- Place this tag after the last +1 button tag. -->
+<script type="text/javascript">
+  (function() {
+    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+    po.src = 'https://apis.google.com/js/platform.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+  })();
+</script>
+&nbsp;
+<script src="//platform.linkedin.com/in.js" type="text/javascript">
+  lang: en_US
+</script>
+<script type="IN/Share" data-counter="top"></script>
+<p>
+	</div>
+	</td></tr>
+	</table></td></tr>
+</table>
+  </div>
+  <div style="position: absolute;top:340px;left:690px;"><p class=drop>[ drop image ]</p></div>
+  <div id="holder"><canvas id='face' width=640 height=640 style='position:relative;'></canvas></div> 
+</article>
+
+<script>
+
+var val_start_canvas = 0;
+var val_shader = 0;
+var val_shader_filled = 1;
+var val_pixel_start_dist = 8, val_pixel_dist = 64;
+var val_pixel_similiar = 2;
+var val_angle_start = 0, val_angle_start_rand = 359, val_arc_length = 360;
+var val_alfa = 100;
+var val_dist_fade = 100;
+var val_inverted_fade = 0;
+var val_steps = 10;
+var val_walk_steps = 10;
+var val_play = 1, val_orig = 0;
+var painting_snap = 0;
+var painting_refresh = 0;
+var painting_restart = 0;
+
+var x_res = 640, y_res = 640;
+
+function value_enable(id, en)
+{
+	(document.getElementById(id)).disabled = en ? "" : "disabled";
+	(document.getElementById(id)).style.color = en ? "#000000" : "#E0E0E0";
+}
+
+function value_set(id, val)
+{
+	(document.getElementById(id)).value = val;
+}
+
+function check_set(id, val)
+{
+	(document.getElementById(id)).checked = val ? true : false;
+}
+
+function combo_set(id, val)
+{
+	(document.getElementById(id)).selectedIndex = val;
+}
+
+function button_refresh(id)
+{
+	switch (id) {
+		case 'play':	value_set('play', val_play ?
+								String.fromCharCode(9612)+String.fromCharCode(9612)+" PAUSE" :
+								String.fromCharCode(9658)+" PLAY");
+							break;
+
+		case 'orig':	value_set('orig', val_orig ?
+								String.fromCharCode(8710)+" SHOW PAINTING" :
+								String.fromCharCode(9650)+" SHOW ORIGINAL");
+							break;
+	};
+}
+
+function painting_start()
+{
+	val_orig = 0; val_play = 1;
+	painting_snap = painting_refresh = 0;
+	img_painting_loaded = 0;
+	button_refresh('play');
+	button_refresh('orig');
+	value_enable('play', 1);
+	value_enable('orig', 1);
+	value_enable('save', 1);
+	value_enable('restart', 1);
+}
+
+var SHADER_LINE = 0;
+var SHADER_TRIANGLE = 1;
+var SHADER_BOX = 2;
+var SHADER_CIRCLE = 3;
+var SHADER_WALK = 4;
+
+function change_shader(sh)
+{
+	val_shader = sh;
+
+	value_enable("walk_steps", val_shader == SHADER_WALK);
+	value_enable("walk_steps_num", val_shader == SHADER_WALK);
+	value_enable("shader_filled", val_shader == SHADER_TRIANGLE || val_shader == SHADER_BOX || val_shader == SHADER_CIRCLE);
+
+	combo_set("shader", sh);
+}
+
+value_set('pixel_dist', val_pixel_dist);
+value_set('pixel_dist_num', val_pixel_dist);
+value_set('pixel_start_dist', val_pixel_start_dist);
+value_set('pixel_start_dist_num', val_pixel_start_dist);
+value_set('pixel_similiar', val_pixel_similiar);
+value_set('pixel_similiar_num', val_pixel_similiar);
+value_set('angle_start', val_angle_start);
+value_set('angle_start_num', val_angle_start);
+value_set('angle_start_rand', val_angle_start_rand);
+value_set('angle_start_rand_num', val_angle_start_rand);
+value_set('arc_length', val_arc_length);
+value_set('arc_length_num', val_arc_length);
+value_set('alfa', val_alfa);
+value_set('alfa_num', val_alfa);
+check_set('inverted_fade', val_inverted_fade);
+value_set('dist_fade', val_dist_fade);
+value_set('dist_fade_num', val_dist_fade);
+combo_set('shader', val_shader);
+value_set('steps', val_steps);
+value_set('steps_num', val_steps);
+value_set('walk_steps', val_walk_steps);
+value_set('walk_steps_num', val_walk_steps);
+change_shader(0);
+check_set('shader_filled', val_shader_filled);
+value_enable('play', 0);
+value_enable('orig', 0);
+value_enable('save', 0);
+value_enable('restart', 0);
+button_refresh('play');
+button_refresh('orig');
+
+function value_get(id)
+{
+	return( (document.getElementById(id)).value );
+}
+
+function value_range(val, min, max)
+{
+	if (val < min) val = min;
+	else
+	if (val > max) val = max;
+
+	return(val);
+}
+
+var img_original;
+var img_painting;
+var img_painting_loaded;
+
+function snap_painting(canvas)
+{
+	img_painting_loaded = 0;
+	img_painting = new Image();
+	img_painting.src = canvas.toDataURL("image/raw");
+	img_painting.onload = function func() { img_painting_loaded = 1; };
+}
+
+function save_painting(canvas)
+{
+	var img = canvas.toDataURL("image/png");
+	window.open(img);
+}
+
+function button_change(obj)
+{
+	switch (obj.id)
+	{
+		case 'save':
+						if (!val_orig) save_painting(canvas);
+						break;
+		case 'play':
+						val_play ^= 1;
+						button_refresh(obj.id);
+						break;
+
+		case 'orig':
+						if (val_orig && !img_painting_loaded) break;
+
+						val_orig ^= 1;
+
+						button_refresh('orig');
+						if (val_orig)
+						{
+							val_play = 0;
+							button_refresh('play');
+							img_painting_loaded = 0;
+							painting_snap = 1;
+							value_enable('play', 0);
+							value_enable('save', 0);
+							value_enable('restart', 0);
+						}
+						else
+						{
+							value_enable('play', 1);
+							value_enable('save', 1);
+							value_enable('restart', 1);
+							painting_refresh = 4;
+						}
+						break;
+
+		case 'restart':
+						painting_restart = 1;
+						break;
+	}
+}
+
+function combo_change(obj)
+{
+	switch (obj.id)
+	{
+		case 'shader': change_shader( obj.selectedIndex ); break;
+		case 'start' : val_start_canvas = obj.selectedIndex; break;
+	}
+}
+
+function value_change(obj)
+{
+	var val = Math.floor(obj.value);
+
+	switch (obj.id)
+	{
+		case 'pixel_dist' :
+		case 'pixel_dist_num' :
+									val = value_range(val, 1, 256);
+									value_set("pixel_dist_num", val);
+									value_set("pixel_dist", val);
+									val_pixel_dist = val;
+									if (val < val_pixel_start_dist)
+									{
+										value_set("pixel_start_dist_num", val);
+										value_set("pixel_start_dist", val);
+										val_pixel_start_dist = val;										
+									}
+									break;
+
+		case 'pixel_start_dist' :
+		case 'pixel_start_dist_num' :
+									val = value_range(val, 1, 256);
+									if (val > val_pixel_dist) val = val_pixel_dist;
+									value_set("pixel_start_dist_num", val);
+									value_set("pixel_start_dist", val);
+									val_pixel_start_dist = val;
+									break;
+
+		case 'pixel_similiar' :
+		case 'pixel_similiar_num' :
+									val = value_range(val, 1, 128);
+									value_set("pixel_similiar_num", val);
+									value_set("pixel_similiar", val);
+									val_pixel_similiar = val;
+									break;
+
+		case 'angle_start':
+		case 'angle_start_num':
+									val = value_range(val, 0, 359);
+									value_set("angle_start_num", val);
+									value_set("angle_start", val);
+									val_angle_start = val;
+									break;
+
+		case 'angle_start_rand':
+		case 'angle_start_rand_num':
+									val = value_range(val, 0, 359);
+									value_set("angle_start_rand_num", val);
+									value_set("angle_start_rand", val);
+									val_angle_start_rand = val;
+									break;
+
+		case 'arc_length':
+		case 'arc_length_num':
+									val = value_range(val, 0, 360);
+									value_set("arc_length_num", val);
+									value_set("arc_length", val);
+									val_arc_length = val;
+									break;
+									
+		case 'inverted_fade':
+									val_inverted_fade = Math.floor( obj.checked );
+									break;
+
+		case 'shader_filled':
+									val_shader_filled = Math.floor( obj.checked );
+									break;
+
+		case 'alfa':
+		case 'alfa_num':
+									val = value_range(val, 0, 100);
+									value_set("alfa_num", val);
+									value_set("alfa", val);
+									val_alfa = val;
+									break;
+
+		case 'dist_fade':
+		case 'dist_fade_num':
+									val = value_range(val, 0, 100);
+									value_set('dist_fade', val);
+									value_set('dist_fade_num', val);
+									val_dist_fade = val;
+									break;
+
+		case 'steps':
+		case 'steps_num':
+									val = value_range(val, 1, 100);
+									value_set('steps', val);
+									value_set('steps_num', val);
+									val_steps = val;
+									break;
+
+		case 'walk_steps':
+		case 'walk_steps_num':
+									val = value_range(val, 2, 100);
+									value_set('walk_steps', val);
+									value_set('walk_steps_num', val);
+									val_walk_steps = val;
+									break;
+	}
+
+}
+
+var holder = document.getElementById('holder');
+
+if (typeof window.FileReader === 'undefined')
+	alert("File API & FileReader is not available.\nYou can't drag and drop images to process filter.");
+
+function line(con_, xs, ys, xe, ye, col, alfa)
+{
+	con_.beginPath();
+	con_.moveTo(xs, ys);
+	con_.lineTo(xe, ye);
+	con_.lineWidth = 1;
+	con_.strokeStyle = col.str;
+	con_.globalAlpha = alfa;
+	con_.stroke();
+}
+
+function circle(context, x, y, r, filled, col, alfa)
+{
+	context.globalAlpha = alfa;
+	context.beginPath();
+	context.arc(x, y, r, 0, 2 * Math.PI, false);
+	context.lineWidth = 1;
+	if (filled)
+	{
+		context.fillStyle = col.str;
+		context.fill();
+	}
+	else
+	{
+		context.strokeStyle = col.str;
+		context.stroke();
+	}
+}
+
+function triangle(con_, x1, y1, x2, y2, x3, y3, filled, col, alfa)
+{
+	con_.beginPath();
+	con_.moveTo(x1, y1);
+	con_.lineTo(x2, y2);
+	con_.lineTo(x3, y3);
+	con_.lineTo(x1, y1);
+	con_.strokeStyle = col.str;
+	con_.lineWidth = 1;
+	con_.globalAlpha = alfa;
+	con_.closePath();
+	if (filled)
+	{
+		con_.fillStyle = col.str;
+		con_.fill();
+	}
+	else
+	{
+		context.strokeStyle = col.str;
+		context.stroke();
+	}
+}
+
+function rgbColor(r,g,b)
+{
+  return 'rgb(' + r + ',' + g + ',' + b + ')';
+}
+
+function RGB(r,g,b)
+{
+	this.r = r/255;
+	this.g = g/255;
+	this.b = b/255;
+	this.str = 'rgb(' + r + ',' + g + ',' + b + ')';
+	return this;
+}
+
+function rnd(n)
+{
+  return Math.floor( Math.random() * n );
+}
+
+function rect(context, x1, y1, wid, hei, filled, col, alfa)
+{
+	context.beginPath();
+	context.globalAlpha = alfa;
+	context.rect(x1, y1, wid, hei);
+	if (filled)
+	{
+		context.fillStyle = col.str;
+		context.fill(); 
+	}
+	else
+	{
+		context.strokeStyle = col.str;
+		context.stroke();
+	}
+}
+
+window.requestAnimFrame = (function(callback) {
+	return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
+	function(callback) {
+	window.setTimeout(callback, 1000 / 60);
+	};
+})();
+
+var img;
+var img_data;
+var col_white = new RGB ( 255, 255, 255 );
+var col_black = new RGB ( 0, 0, 0 );
+var DVAPI = 2*Math.PI;
+
+function get_alfa(dist)
+{
+	var alfa = val_alfa*(dist - val_pixel_start_dist ) / ( 100 * (val_pixel_dist - val_pixel_start_dist) );
+	if (val_inverted_fade) alfa = 1 - alfa;
+	alfa = ( val_alfa * (100 - val_dist_fade) ) / (100*100) + ( alfa * val_dist_fade ) / 100;
+
+	return (alfa);
+}
+
+// actual algo \o/
+// written by Zden Hlinka, Jun-July 2014 (C) Satori, s.r.o., All right reserved., zden@satori.sk
+// for non-commercial, artistic and educational use only
+
+function animate_paint(canvas, context)
+{
+	var a, c, x, y, p;
+	var col;
+	var xx, yy, xxx, yyy, ang, pp, dist;
+	var ang_s, ang_e, found;
+	var alfa;
+
+	if (painting_refresh)
+	{
+		rect(context, 0, 0, x_res, y_res, 1, col_white, 1);
+		painting_refresh = 0;
+		context.globalAlpha = 1;
+		context.drawImage(img_painting, 0, 0, x_res, y_res);
+	}
+
+	if (painting_restart)
+	{
+		painting_restart = 0;
+		rect(context, 0, 0, x_res, y_res, 1, !val_start_canvas ? col_white : col_black, 1);
+	}
+
+	if (val_play)
+
+	for (a = 0; a < val_steps; a++)
+	{
+		x = rnd(x_res - 1);
+		y = rnd(y_res - 1);
+		p = y*x_res*4 + x*4;
+		col = new RGB(img_data[p], img_data[p+1], img_data[p+2]);
+
+		if (val_shader == SHADER_WALK)
+			c = val_walk_steps;
+		else
+			c = val_shader == SHADER_TRIANGLE ? 2 : 1;
+		do {
+			found = 0;
+			for (dist = val_pixel_start_dist; dist <= val_pixel_dist && !found; dist++)
+			{
+				ang_s = (DVAPI * val_angle_start)/360;
+				ang_s += (DVAPI * rnd(val_angle_start_rand))/360;
+				ang_e = ang_s + ((val_arc_length) * DVAPI)/360;
+				for (ang = ang_s; ang < ang_e; ang += 0.031415926)
+				{
+					xx = x + Math.sin(ang)*dist;
+					yy = y + Math.cos(ang)*dist;
+					xx = Math.floor(xx);
+					yy = Math.floor(yy);
+					if (xx < 0) break; if (yy < 0) break;
+					if (xx >= x_res) break; if (yy >= y_res) break;
+					pp = yy*x_res*4 + xx*4;
+					if ( Math.abs(img_data[p] - img_data[pp]) <= val_pixel_similiar &&
+						Math.abs(img_data[p+1] - img_data[pp+1]) <= val_pixel_similiar &&
+						Math.abs(img_data[p+2] - img_data[pp+2]) <= val_pixel_similiar )
+					{
+						found = 1;
+						break;
+					}
+				}
+			}
+			if (val_shader != SHADER_WALK)
+			{
+				if (c == 2)
+				{
+					xxx = xx;
+					yyy = yy;
+				}
+			}
+			else
+			{
+				if (found)
+				{
+					alfa = get_alfa(dist);
+					line(context, x, y, xx, yy, col, alfa);
+					x = xx; y = yy;
+				}
+			}
+			c--;
+		} while (c && found);
+		if (val_shader != SHADER_WALK && found)
+		{	
+			alfa = get_alfa(dist);
+			switch (val_shader)
+			{
+				case SHADER_LINE: line(context, x, y, xx, yy, col, alfa); break;
+				case SHADER_TRIANGLE: triangle(context, x, y, xx, yy, xxx, yyy, val_shader_filled, col, alfa); break;
+				case SHADER_CIRCLE: circle(context, (x+xx)/2, (y+yy)/2, Math.sqrt((xx-x+1)*(xx-x+1) + (yy-y+1)*(yy-y+1)), val_shader_filled, col, alfa); break;
+				case SHADER_BOX: rect(context, x, y, xx-x+1, yy-y+1, val_shader_filled, col, alfa); break;
+			}
+		}
+	}
+	
+	if (painting_snap)
+	{
+		painting_snap = 0;
+		snap_painting(canvas);
+	}
+	if (val_orig)
+	{
+		context.globalAlpha = 1;
+		context.drawImage(img_original, 0, 0, x_res, y_res);
+	}
+
+	favicon_context.globalAlpha = 1;
+	favicon_context.drawImage(canvas, 0, 0, 16, 16);
+	favicon_link.href = favicon_canvas.toDataURL("image/x-icon");
+	document.getElementsByTagName('head')[0].appendChild(favicon_link);
+
+	requestAnimFrame(function() { animate_paint(canvas, context); });
+}
+
+// ^^^ end of algo
+
+var canvas = 0, context = 0;
+function paint(face_img)
+{
+	if (!canvas) canvas = document.getElementById('face');
+	if (!context) context = canvas.getContext('2d');
+
+	var wid = face_img.width, hei = face_img.height;
+
+	if (wid > hei)
+	{
+		x_res = wid/hei*640;
+		y_res = 640;
+	}
+	else
+	{
+		x_res = 640;
+		y_res = hei/wid*640;
+	}
+	x_res &= 0xfff0;
+	y_res &= 0xfff0; // js is very slow on unaligned data width
+	holder.className = 'paint';
+	holder.style.width = x_res+"px";
+	holder.style.height = y_res+"px";
+	canvas.width = x_res;
+	canvas.height = y_res;
+	canvas.style.width = x_res+"px";
+	canvas.style.height = y_res+"px";
+	context.drawImage(face_img, 0, 0, x_res, y_res);
+
+	var imageData = context.getImageData(0, 0, x_res, y_res);
+	img_data = imageData.data;
+
+	rect(context, 0, 0, x_res, y_res, 1, !val_start_canvas ? col_white : col_black, 1);
+
+	painting_start();
+	img_original = face_img;
+	
+	animate_paint(canvas, context);
+}
+
+holder.ondragover = function () { this.className = 'hover'; return false; };
+holder.ondragleave = function () { this.className = ''; return false; };
+holder.ondrop = function (e) {
+
+  this.className = '';
+  e.stopPropagation();
+  e.preventDefault();
+
+  var file = e.dataTransfer.files[0];
+
+  reader = new FileReader();
+  reader.onload = function (event) {
+    var img = new Image();
+    img.src = event.target.result;
+	img.onload = function () {
+		paint(img);
+	};
+}
+	reader.readAsDataURL(file);
+
+  return false;
+};
+
+var favicon_canvas = document.createElement('canvas');
+favicon_canvas.width = 16;
+favicon_canvas.height = 16;
+var favicon_context = favicon_canvas.getContext('2d');
+var fav_col1 = new RGB(0x80, 0x40, 00);
+var fav_col2 = new RGB(0xF0, 0x90, 00);
+line(favicon_context, 0, 15, 4, 1, fav_col1, 1);
+line(favicon_context, 3, 15, 4+3, 1, fav_col1, 1);
+line(favicon_context, 6, 15, 4+6, 1, fav_col2, 1);
+line(favicon_context, 9, 15, 4+9, 1, fav_col2, 1);
+line(favicon_context, 12, 15, 4+12, 1, fav_col2, 1);
+var favicon_link = document.createElement('link');
+favicon_link.type = 'image/x-icon';
+favicon_link.rel = 'shortcut icon';
+favicon_link.href = favicon_canvas.toDataURL("image/x-icon");
+document.getElementsByTagName('head')[0].appendChild(favicon_link);
+
+// Wilder's quote: I like art because I consider it to be the highest form of unregulated freedom.
+
+</script>
+
+</body>
+</html>
