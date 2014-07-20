@@ -18,7 +18,7 @@
 <body background="bg.gif">
 <header>
 <table width="100%">
-<tr><td class=title width=100%>GEOMETRIC <fx style="color:#804000">//</fx> PHOTO FILTER <fx style="color:#F08000">/  /    /</fx></td><td align=right>©&nbsp;2014&nbsp;<a href="http://Zd3N.com">Zd3N.com</a>&nbsp;<a href="http://satori.sk">Satori&nbsp;SK</a>&nbsp;|&nbsp;<a href="http://github.org/zden/face.haluska.sk">source</a><br>::&nbsp;ver.&nbsp;1.0&nbsp;|&nbsp;July/17/2014&nbsp;::</td></tr>
+<tr><td class=title width=100%>GEOMETRIC <fx style="color:#804000">//</fx> PHOTO FILTER <fx style="color:#F08000">/  /    /</fx></td><td align=right>©&nbsp;2014&nbsp;<a href="http://Zd3N.com">Zd3N.com</a>&nbsp;<a href="http://satori.sk">Satori&nbsp;SK</a>&nbsp;|&nbsp;<a href="http://github.org/zden/face.haluska.sk">source</a><br>::&nbsp;ver.&nbsp;1.02&nbsp;|&nbsp;July/19/2014&nbsp;::</td></tr>
 </table>
 </header>
 <style>
@@ -86,8 +86,8 @@ a:hover {
 	<td width=210 align=right><input style="width: 80px;" id='play' type='button' value="&#9658; PAUSE" onclick=button_change(this) />&nbsp;&nbsp;&nbsp;</td></tr>
 	</table>
 		<table><tr><td width=150>Shader:</td><td>
-		<select id='shader' onChange=combo_change(this)>
-			<option value=66>Line</option>
+		<select style="width:105px;" id='shader' onChange=combo_change(this)>
+			<option>Line</option>
 			<option>Triangle</option>
 			<option>Rectangle</option>
 			<option>Circle</option>
@@ -95,31 +95,50 @@ a:hover {
 		</select></td><td></td>
 		</tr>
 	<tr><td>Filled Shader:</td><td><input id="shader_filled" type="checkbox" value="0" onchange=value_change(this) /></td><td></td><td></td><tr>
-	<tr><td>Alfa:</td><td><input id="alfa" type="range" min="0" max="100" value="100" onchange=value_change(this) /></td><td><input style="width:64px;" id="alfa_num" type="number" min="0" max="100" value="100" onchange=value_change(this.id) /></td></tr>	
+	<tr><td>Alfa:</td><td><input id="alfa" type="range" min="0" max="100" value="100" onchange=value_change(this) /></td><td><input style="width:64px;" id="alfa_num" type="number" min="0" max="100" value="100" onchange=value_change(this) /></td></tr>	
+	<tr><td>Line Width:</td><td><input id="line_stroke" type="range" min="1" max="100" value="1" onchange=value_change(this) /></td><td><input style="width:64px;" id="line_stroke_num" type="number" min="1" max="100" value="1" onchange=value_change(this) /></td></tr>	
+	<tr><td>Line Cap:</td><td><select style="width:105px;" id='line_cap' onChange=combo_change(this)>
+			<option>Butt</option>
+			<option>Round</option>
+			<option>Square</option>
+		</select>
+	</td></tr>	
+	<tr><td colspan=4></td></tr>
 	<tr><td bgcolor="#EED000" colspan=4></td></tr>
+	<tr><td colspan=4></td></tr>
 	<tr><td>Start Distance:</td><td><input id="pixel_start_dist" type="range" min="1" max="256" value="8" onchange=value_change(this) /></td><td><input style="width:64px;" id="pixel_start_dist_num" type="number" onchange=value_change(this) value="8" /></td></tr>
 	<tr><td>Max Distance:</td><td><input id="pixel_dist" type="range" min="1" max="256" value="64" onchange=value_change(this) /></td><td><input style="width:64px;" id="pixel_dist_num" type="number" onchange=value_change(this) value="64" /></td></tr>
 	<tr><td>Color Similiarity:</td><td><input id="pixel_similiar" type="range" min="1" max="128" value="1" onchange=value_change(this) /></td><td><input style="width:64px;" id="pixel_similiar_num" type="number" min="1" max="128" value="1" onchange=value_change(this) /></td></tr>
 	<tr><td colspan=4><fx style="color:#808080; font-size: 8pt;">Value represents maximal difference between R/G/B components.<br>The lower the value, the more exact color you seek.</fx>
+	<tr><td colspan=4></td></tr>
 	<tr><td bgcolor="#EED800" colspan=4></td></tr>
+	<tr><td colspan=4></td></tr>
 	<tr><td>Start Angle:</td><td><input id="angle_start" type="range" min="0" max="359" value="0" onchange=value_change(this) /></td><td><input style="width:64px;" id="angle_start_num" type="number" min="0" max="359" value="0" onchange=value_change(this) /></td></tr>
 	<tr><td>Start Angle Randomize:</td><td><input id="angle_start_rand" type="range" min="0" max="359" value="359" onchange=value_change(this) /></td><td><input style="width:64px;" id="angle_start_rand_num" type="number" min="0" max="359" value="356" onchange=value_change(this) /></td></tr>
 	<tr><td>Arc Length:</td><td><input id="arc_length" type="range" min="0" max="360" value="360" onchange=value_change(this) /></td><td><input style="width:64px;" id="arc_length_num" type="number" min="0" max="360" value="360" onchange=value_change(this) /></td></tr>
+	<tr><td colspan=4></td></tr>
 	<tr><td bgcolor="#EEE000" colspan=4></td></tr>
+	<tr><td colspan=4></td></tr>
 	<tr><td>Fade by Distance:</td><td><input id="dist_fade" type="range" min="0" max="100" value="100" onchange=value_change(this) /></td><td><input style="width:64px;" id="dist_fade_num" type="number" min="0" max="100" value="100" onchange=value_change(this) /></td></tr>
 	<tr><td>Inverted Fade:</td><td><input id="inverted_fade" type="checkbox" value="0" onchange=value_change(this) /></td><td></td><td></td><tr>
+	<tr><td colspan=4></td></tr>
 	<tr><td bgcolor="#EEE800" colspan=4></td></tr>
-	<tr><td>Steps per Frame: <fx style="color:#F02020; font-size: 8pt;">*</fx></td><td><input id="steps" type="range" min="1" max="100" value="10" onchange=value_change(this) /></td><td><input style="width:64px;" id="steps_num" type="number" min="1" max="100" value="10" onchange=value_change(this) /></td></tr>
-	<tr><td>Max Steps per Walk: <fx style="color:#F02020; font-size: 8pt;">*</fx></td><td><input id="walk_steps" type="range" min="2" max="100" value="10" onchange=value_change(this) /></td><td><input style="width:64px;" id="walk_steps_num" type="number" min="2" max="100" value="10" onchange=value_change(this) /></td></tr>
+	<tr><td colspan=4></td></tr>
+	<tr><td>Steps per Frame: <fx style="color:#F02020; font-size: 8pt;">*</fx></td><td><input id="steps" type="range" min="1" max="256" value="10" onchange=value_change(this) /></td><td><input style="width:64px;" id="steps_num" type="number" min="1" max="256" value="10" onchange=value_change(this) /></td></tr>
+	<tr><td>Max Steps per Walk: <fx style="color:#F02020; font-size: 8pt;">*</fx></td><td><input id="walk_steps" type="range" min="2" max="256" value="10" onchange=value_change(this) /></td><td><input style="width:64px;" id="walk_steps_num" type="number" min="2" max="256" value="10" onchange=value_change(this) /></td></tr>
 	<tr><td colspan=4><fx style="color:#F02020; font-size: 8pt;">* Careful with steps parameters. Higher values on a slow computer will almost certain brick your browser.</fx>
+	<tr><td colspan=4></td></tr>
 	<tr><td bgcolor="#D0D0D0" colspan=4></td></tr>
+	<tr><td colspan=4></td></tr>
 	<tr><td><input style="width: 140px;" id='orig' type='button' value="SHOW ORIGINAL" onclick=button_change(this) /></td><td><input style="width: 85px;" id='restart' type='button' value="&#8857; RESTART" onclick=button_change(this) /></td><td></td></tr>
 	<tr><td width=150>Start with:</td><td>
 	<select id='start' onChange=combo_change(this)>
 		<option>White Canvas</option>
 		<option>Black Canvas</option>
 	</td><td></td></tr>
+	<tr><td colspan=4></td></tr>
 	<tr><td bgcolor="#D0D0D0" colspan=4></td></tr>
+	<tr><td colspan=4></td></tr>
 	</table>
 	<tr><td>
 	<table><tr><td style="text-align: justify;">
@@ -127,7 +146,7 @@ a:hover {
 	<b>About:</b><br><desc style="color:#505070">
 	Photo filter based on random lookup for neighbouring pixels with similar color property and applying found pixels' positions and color for shading via drawing basic geometric primitives.
 	<br><br>Seek for the similar pixel is started from the center radially. You can set starting and ending seek distance as well range of the circle sector. Alpha is calculated according to the distance of found pixels. "Line Walk" is a special mode when line primitive repeats seek process multiple times for the same color starting again from the newly found pixel.</desc><p>
-	<b>Future:</b><br><desc style="color:#505070">If you like the filter share your interest. I have a couple of ideas to progress this further. Some of them are about the new parameters to control colors or extend Walk feature to other primitives. I am especially interested to implement ability to record all your actions with feature to reapply these steps on another picture which gives a possibility for motion video application.</desc><p>
+	<b>Future:</b><br><desc style="color:#505070">If you like the filter <a href="http://www.facebook.com/GeometricPhotoFilter">share your interest or creations</a>. I have a couple of ideas to progress this further. Some of them are about the new parameters to control colors or extend Walk feature to other primitives. I am especially interested to implement ability to record all your actions with feature to reapply these steps on another picture which gives a possibility for motion video application.</desc><p>
 	</td></tr>
 	<tr><td>
 	<div id="social" style="position: relative; top: 16; visibility: visible; z-index: 99">
@@ -167,7 +186,11 @@ a:hover {
 	</table></td></tr>
 </table>
   </div>
-  <div style="position: absolute;top:340px;left:690px;"><p class=drop>[ drop image ]</p></div>
+  <div style="position: absolute;top:340px;left:690px;"><p class=drop>[&nbsp;drop&nbsp;image&nbsp;]</p></div>
+  <div style="position: absolute;top:690;left:862;z-index:99;" id="divupload"><p class=drop>
+	<label for="upload" class="uploadButton">[ upload image ]</label>
+	<input style="opacity:0" type="file" name="upload" id="upload">
+	</div>
   <div id="holder"><canvas id='face' width=640 height=640 style='position:relative;'></canvas></div> 
 </article>
 
@@ -180,6 +203,8 @@ var val_pixel_start_dist = 8, val_pixel_dist = 64;
 var val_pixel_similiar = 2;
 var val_angle_start = 0, val_angle_start_rand = 359, val_arc_length = 360;
 var val_alfa = 100;
+var val_stroke = 1;
+var val_line_cap = 1;
 var val_dist_fade = 100;
 var val_inverted_fade = 0;
 var val_steps = 10;
@@ -271,6 +296,9 @@ value_set('arc_length', val_arc_length);
 value_set('arc_length_num', val_arc_length);
 value_set('alfa', val_alfa);
 value_set('alfa_num', val_alfa);
+value_set('line_stroke', val_stroke);
+value_set('line_stroke_num', val_stroke);
+combo_set('line_cap', val_line_cap);
 check_set('inverted_fade', val_inverted_fade);
 value_set('dist_fade', val_dist_fade);
 value_set('dist_fade_num', val_dist_fade);
@@ -369,6 +397,7 @@ function combo_change(obj)
 	{
 		case 'shader': change_shader( obj.selectedIndex ); break;
 		case 'start' : val_start_canvas = obj.selectedIndex; break;
+		case 'line_cap' : val_line_cap = obj.selectedIndex; break;
 	}
 }
 
@@ -449,6 +478,14 @@ function value_change(obj)
 									val_alfa = val;
 									break;
 
+		case 'line_stroke':
+		case 'line_stroke_num':
+									val = value_range(val, 1, 100);
+									value_set("line_stroke_num", val);
+									value_set("line_stroke", val);
+									val_stroke = val;
+									break;
+
 		case 'dist_fade':
 		case 'dist_fade_num':
 									val = value_range(val, 0, 100);
@@ -459,7 +496,7 @@ function value_change(obj)
 
 		case 'steps':
 		case 'steps_num':
-									val = value_range(val, 1, 100);
+									val = value_range(val, 1, 256);
 									value_set('steps', val);
 									value_set('steps_num', val);
 									val_steps = val;
@@ -467,7 +504,7 @@ function value_change(obj)
 
 		case 'walk_steps':
 		case 'walk_steps_num':
-									val = value_range(val, 2, 100);
+									val = value_range(val, 2, 256);
 									value_set('walk_steps', val);
 									value_set('walk_steps_num', val);
 									val_walk_steps = val;
@@ -481,23 +518,24 @@ var holder = document.getElementById('holder');
 if (typeof window.FileReader === 'undefined')
 	alert("File API & FileReader is not available.\nYou can't drag and drop images to process filter.");
 
-function line(con_, xs, ys, xe, ye, col, alfa)
+function line(con_, xs, ys, xe, ye, col, alfa, stroke, cap)
 {
+	con_.lineWidth = stroke;
+	con_.strokeStyle = col.str;
+	con_.globalAlpha = alfa;
+	con_.lineCap= !cap ? "butt" : cap == 1 ? "round" : "square";
 	con_.beginPath();
 	con_.moveTo(xs, ys);
 	con_.lineTo(xe, ye);
-	con_.lineWidth = 1;
-	con_.strokeStyle = col.str;
-	con_.globalAlpha = alfa;
 	con_.stroke();
 }
 
-function circle(context, x, y, r, filled, col, alfa)
+function circle(context, x, y, r, filled, col, alfa, stroke)
 {
+	context.lineWidth = stroke;
 	context.globalAlpha = alfa;
 	context.beginPath();
 	context.arc(x, y, r, 0, 2 * Math.PI, false);
-	context.lineWidth = 1;
 	if (filled)
 	{
 		context.fillStyle = col.str;
@@ -510,15 +548,15 @@ function circle(context, x, y, r, filled, col, alfa)
 	}
 }
 
-function triangle(con_, x1, y1, x2, y2, x3, y3, filled, col, alfa)
+function triangle(con_, x1, y1, x2, y2, x3, y3, filled, col, alfa, stroke)
 {
+	con_.lineWidth = stroke;
 	con_.beginPath();
 	con_.moveTo(x1, y1);
 	con_.lineTo(x2, y2);
 	con_.lineTo(x3, y3);
 	con_.lineTo(x1, y1);
 	con_.strokeStyle = col.str;
-	con_.lineWidth = 1;
 	con_.globalAlpha = alfa;
 	con_.closePath();
 	if (filled)
@@ -552,8 +590,9 @@ function rnd(n)
   return Math.floor( Math.random() * n );
 }
 
-function rect(context, x1, y1, wid, hei, filled, col, alfa)
+function rect(context, x1, y1, wid, hei, filled, col, alfa, stroke)
 {
+	context.lineWidth = stroke;
 	context.beginPath();
 	context.globalAlpha = alfa;
 	context.rect(x1, y1, wid, hei);
@@ -617,6 +656,8 @@ function animate_paint(canvas, context)
 		rect(context, 0, 0, x_res, y_res, 1, !val_start_canvas ? col_white : col_black, 1);
 	}
 
+	context.lineCap="round";
+
 	if (val_play)
 
 	for (a = 0; a < val_steps; a++)
@@ -668,7 +709,7 @@ function animate_paint(canvas, context)
 				if (found)
 				{
 					alfa = get_alfa(dist);
-					line(context, x, y, xx, yy, col, alfa);
+					line(context, x, y, xx, yy, col, alfa, val_stroke, val_line_cap);
 					x = xx; y = yy;
 				}
 			}
@@ -679,10 +720,10 @@ function animate_paint(canvas, context)
 			alfa = get_alfa(dist);
 			switch (val_shader)
 			{
-				case SHADER_LINE: line(context, x, y, xx, yy, col, alfa); break;
-				case SHADER_TRIANGLE: triangle(context, x, y, xx, yy, xxx, yyy, val_shader_filled, col, alfa); break;
-				case SHADER_CIRCLE: circle(context, (x+xx)/2, (y+yy)/2, Math.sqrt((xx-x+1)*(xx-x+1) + (yy-y+1)*(yy-y+1)), val_shader_filled, col, alfa); break;
-				case SHADER_BOX: rect(context, x, y, xx-x+1, yy-y+1, val_shader_filled, col, alfa); break;
+				case SHADER_LINE: line(context, x, y, xx, yy, col, alfa, val_stroke, val_line_cap); break;
+				case SHADER_TRIANGLE: triangle(context, x, y, xx, yy, xxx, yyy, val_shader_filled, col, alfa, val_stroke); break;
+				case SHADER_CIRCLE: circle(context, (x+xx)/2, (y+yy)/2, Math.sqrt((xx-x+1)*(xx-x+1) + (yy-y+1)*(yy-y+1)), val_shader_filled, col, alfa, val_stroke); break;
+				case SHADER_BOX: rect(context, x, y, xx-x+1, yy-y+1, val_shader_filled, col, alfa, val_stroke); break;
 			}
 		}
 	}
@@ -728,6 +769,10 @@ function paint(face_img)
 	}
 	x_res &= 0xfff0;
 	y_res &= 0xfff0; // js is very slow on unaligned data width
+	
+	divupload = document.getElementById('divupload');
+	divupload.style.left = (860+(x_res-640))+"px";
+	divupload.style.top = (690+(y_res-640))+"px";
 	holder.className = 'paint';
 	holder.style.width = x_res+"px";
 	holder.style.height = y_res+"px";
@@ -735,6 +780,7 @@ function paint(face_img)
 	canvas.height = y_res;
 	canvas.style.width = x_res+"px";
 	canvas.style.height = y_res+"px";
+// io6 squash issue fix -> http://stackoverflow.com/questions/11929099/html5-canvas-drawimage-ratio-bug-ios
 	context.drawImage(face_img, 0, 0, x_res, y_res);
 
 	var imageData = context.getImageData(0, 0, x_res, y_res);
@@ -748,6 +794,17 @@ function paint(face_img)
 	animate_paint(canvas, context);
 }
 
+function read_image(file)
+{
+	reader = new FileReader();
+	reader.onload = function (event) {
+		var img = new Image();
+		img.src = event.target.result;
+		img.onload = function () { paint(img); };
+	}
+	reader.readAsDataURL(file);
+}
+
 holder.ondragover = function () { this.className = 'hover'; return false; };
 holder.ondragleave = function () { this.className = ''; return false; };
 holder.ondrop = function (e) {
@@ -755,21 +812,17 @@ holder.ondrop = function (e) {
   this.className = '';
   e.stopPropagation();
   e.preventDefault();
-
-  var file = e.dataTransfer.files[0];
-
-  reader = new FileReader();
-  reader.onload = function (event) {
-    var img = new Image();
-    img.src = event.target.result;
-	img.onload = function () {
-		paint(img);
-	};
-}
-	reader.readAsDataURL(file);
+  
+  read_image(e.dataTransfer.files[0]);
 
   return false;
 };
+
+function file_select(evt)
+{
+	read_image(evt.target.files[0]);
+}
+document.getElementById('upload').addEventListener('change', file_select, false);
 
 var favicon_canvas = document.createElement('canvas');
 favicon_canvas.width = 16;
@@ -777,11 +830,11 @@ favicon_canvas.height = 16;
 var favicon_context = favicon_canvas.getContext('2d');
 var fav_col1 = new RGB(0x80, 0x40, 00);
 var fav_col2 = new RGB(0xF0, 0x90, 00);
-line(favicon_context, 0, 15, 4, 1, fav_col1, 1);
-line(favicon_context, 3, 15, 4+3, 1, fav_col1, 1);
-line(favicon_context, 6, 15, 4+6, 1, fav_col2, 1);
-line(favicon_context, 9, 15, 4+9, 1, fav_col2, 1);
-line(favicon_context, 12, 15, 4+12, 1, fav_col2, 1);
+line(favicon_context, 0, 15, 4, 1, fav_col1, 1, 1, 0);
+line(favicon_context, 3, 15, 4+3, 1, fav_col1, 1, 1, 0);
+line(favicon_context, 6, 15, 4+6, 1, fav_col2, 1, 1, 0);
+line(favicon_context, 9, 15, 4+9, 1, fav_col2, 1, 1, 0);
+line(favicon_context, 12, 15, 4+12, 1, fav_col2, 1, 1, 0);
 var favicon_link = document.createElement('link');
 favicon_link.type = 'image/x-icon';
 favicon_link.rel = 'shortcut icon';
@@ -789,6 +842,17 @@ favicon_link.href = favicon_canvas.toDataURL("image/x-icon");
 document.getElementsByTagName('head')[0].appendChild(favicon_link);
 
 // Wilder's quote: I like art because I consider it to be the highest form of unregulated freedom.
+
+</script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-40773143-2', 'haluska.sk');
+  ga('send', 'pageview');
 
 </script>
 
