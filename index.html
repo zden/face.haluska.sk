@@ -16,9 +16,9 @@
 	<link rel="image_src" href="http://face1.png" / >
 </head>
 <body background="bg.gif">
-<header>
-<table width="100%">
-<tr><td class=title width=100%>GEOMETRIC <fx style="color:#804000">//</fx> PHOTO FILTER <fx style="color:#F08000">/  /    /</fx></td><td align=right>©&nbsp;2014&nbsp;<a href="http://Zd3N.com">Zd3N.com</a>&nbsp;<a href="http://satori.sk">Satori&nbsp;SK</a>&nbsp;|&nbsp;<a href="http://github.org/zden/face.haluska.sk">source</a><br>::&nbsp;ver.&nbsp;1.02&nbsp;|&nbsp;July/19/2014&nbsp;::</td></tr>
+<header style="min-width:100%;">
+<table>
+<tr><td class=title width=100% style="white-space: nowrap;">GEOMETRIC <fx style="color:#804000">//</fx> PHOTO FILTER <fx style="color:#F08000">/  /    /</fx></td><td align=right style="white-space: nowrap;">© 2014 <a target="_blank" href="http://Zd3N.com">Zd3N.com</a> <a target="_blank" href="http://satori.sk">Satori SK</a> | <a target="_blank" href="http://github.org/zden/face.haluska.sk">source</a><br>ver. 1.05 | July/22/2014 | <a href="changelog.md" target="_blank">changelog</a></td></tr>
 </table>
 </header>
 <style>
@@ -85,7 +85,27 @@ a:hover {
 	<table width=420><tr><td width=210><input style="width: 130px;" id='save' type='button' value="&#9658; SAVE PAINTING" onclick=button_change(this) /></td>
 	<td width=210 align=right><input style="width: 80px;" id='play' type='button' value="&#9658; PAUSE" onclick=button_change(this) />&nbsp;&nbsp;&nbsp;</td></tr>
 	</table>
-		<table><tr><td width=150>Shader:</td><td>
+		<table>
+		<tr><td width=150>Presets:</td><td>
+		<select style="width:150px;" id='preset' onChange=combo_change(this)>
+			<option>- Select Preset -</option>
+			<option>- - - - - - - - - - -</option>
+			<option>> Basic Strong Lines</option>
+			<option>> Rough Scatch</option>
+			<option>> Hatched Shade</option>
+			<option>> Recursive Lines</option>
+			<option>> Blurred Water Color </option>
+			<option>> Triangles</option>
+			<option>> Horizontal Lines</option>
+			<option>- - - - - - - - - - -</option>
+			<option>Save Preset</option>
+			<option>Load Preset</option>
+		</select></td><td></td>
+		</tr>
+		<tr><td colspan=4></td></tr>
+		<tr><td bgcolor="#EED000" colspan=4></td></tr>
+		<tr><td colspan=4></td></tr>
+		<tr><td width=150>Shader:</td><td>
 		<select style="width:105px;" id='shader' onChange=combo_change(this)>
 			<option>Line</option>
 			<option>Triangle</option>
@@ -96,7 +116,7 @@ a:hover {
 		</tr>
 	<tr><td>Filled Shader:</td><td><input id="shader_filled" type="checkbox" value="0" onchange=value_change(this) /></td><td></td><td></td><tr>
 	<tr><td>Alfa:</td><td><input id="alfa" type="range" min="0" max="100" value="100" onchange=value_change(this) /></td><td><input style="width:64px;" id="alfa_num" type="number" min="0" max="100" value="100" onchange=value_change(this) /></td></tr>	
-	<tr><td>Line Width:</td><td><input id="line_stroke" type="range" min="1" max="100" value="1" onchange=value_change(this) /></td><td><input style="width:64px;" id="line_stroke_num" type="number" min="1" max="100" value="1" onchange=value_change(this) /></td></tr>	
+	<tr><td>Line Width:</td><td><input id="line_width" type="range" min="1" max="100" value="1" onchange=value_change(this) /></td><td><input style="width:64px;" id="line_width_num" type="number" min="1" max="100" value="1" onchange=value_change(this) /></td></tr>	
 	<tr><td>Line Cap:</td><td><select style="width:105px;" id='line_cap' onChange=combo_change(this)>
 			<option>Butt</option>
 			<option>Round</option>
@@ -115,7 +135,7 @@ a:hover {
 	<tr><td colspan=4></td></tr>
 	<tr><td>Start Angle:</td><td><input id="angle_start" type="range" min="0" max="359" value="0" onchange=value_change(this) /></td><td><input style="width:64px;" id="angle_start_num" type="number" min="0" max="359" value="0" onchange=value_change(this) /></td></tr>
 	<tr><td>Start Angle Randomize:</td><td><input id="angle_start_rand" type="range" min="0" max="359" value="359" onchange=value_change(this) /></td><td><input style="width:64px;" id="angle_start_rand_num" type="number" min="0" max="359" value="356" onchange=value_change(this) /></td></tr>
-	<tr><td>Arc Length:</td><td><input id="arc_length" type="range" min="0" max="360" value="360" onchange=value_change(this) /></td><td><input style="width:64px;" id="arc_length_num" type="number" min="0" max="360" value="360" onchange=value_change(this) /></td></tr>
+	<tr><td>Arc Length:</td><td><input id="arc_length" type="range" min="1" max="360" value="360" onchange=value_change(this) /></td><td><input style="width:64px;" id="arc_length_num" type="number" min="1" max="360" value="360" onchange=value_change(this) /></td></tr>
 	<tr><td colspan=4></td></tr>
 	<tr><td bgcolor="#EEE000" colspan=4></td></tr>
 	<tr><td colspan=4></td></tr>
@@ -126,7 +146,7 @@ a:hover {
 	<tr><td colspan=4></td></tr>
 	<tr><td>Steps per Frame: <fx style="color:#F02020; font-size: 8pt;">*</fx></td><td><input id="steps" type="range" min="1" max="256" value="10" onchange=value_change(this) /></td><td><input style="width:64px;" id="steps_num" type="number" min="1" max="256" value="10" onchange=value_change(this) /></td></tr>
 	<tr><td>Max Steps per Walk: <fx style="color:#F02020; font-size: 8pt;">*</fx></td><td><input id="walk_steps" type="range" min="2" max="256" value="10" onchange=value_change(this) /></td><td><input style="width:64px;" id="walk_steps_num" type="number" min="2" max="256" value="10" onchange=value_change(this) /></td></tr>
-	<tr><td colspan=4><fx style="color:#F02020; font-size: 8pt;">* Careful with steps parameters. Higher values on a slow computer will almost certain brick your browser.</fx>
+	<tr><td colspan=4><fx style="color:#F02020; font-size: 8pt;">* Careful with steps parameters. Higher values on really slow computer might brick your browser.</fx>
 	<tr><td colspan=4></td></tr>
 	<tr><td bgcolor="#D0D0D0" colspan=4></td></tr>
 	<tr><td colspan=4></td></tr>
@@ -135,7 +155,10 @@ a:hover {
 	<select id='start' onChange=combo_change(this)>
 		<option>White Canvas</option>
 		<option>Black Canvas</option>
+		<option style="background-color:orange" id="canvas_color_option">Custom Color</option>
 	</td><td></td></tr>
+	<tr><td>Custom Color:</td><td><input id="canvas_color" type="string" value="orange" size="9" onchange=value_change(this) /></td><td style="background-color:orange;" id="canvas_color_td"></td></tr>
+	<tr><td colspan=4><fx style="color:#808080; font-size: 8pt;">Color by English name or RGB value in hexadecimal.</fx>
 	<tr><td colspan=4></td></tr>
 	<tr><td bgcolor="#D0D0D0" colspan=4></td></tr>
 	<tr><td colspan=4></td></tr>
@@ -196,6 +219,7 @@ a:hover {
 
 <script>
 
+var val_canvas_color = new RGB(0xff, 0x80, 0x00);
 var val_start_canvas = 0;
 var val_shader = 0;
 var val_shader_filled = 1;
@@ -203,7 +227,7 @@ var val_pixel_start_dist = 8, val_pixel_dist = 64;
 var val_pixel_similiar = 2;
 var val_angle_start = 0, val_angle_start_rand = 359, val_arc_length = 360;
 var val_alfa = 100;
-var val_stroke = 1;
+var val_line_width = 1;
 var val_line_cap = 1;
 var val_dist_fade = 100;
 var val_inverted_fade = 0;
@@ -282,39 +306,16 @@ function change_shader(sh)
 	combo_set("shader", sh);
 }
 
-value_set('pixel_dist', val_pixel_dist);
-value_set('pixel_dist_num', val_pixel_dist);
-value_set('pixel_start_dist', val_pixel_start_dist);
-value_set('pixel_start_dist_num', val_pixel_start_dist);
-value_set('pixel_similiar', val_pixel_similiar);
-value_set('pixel_similiar_num', val_pixel_similiar);
-value_set('angle_start', val_angle_start);
-value_set('angle_start_num', val_angle_start);
-value_set('angle_start_rand', val_angle_start_rand);
-value_set('angle_start_rand_num', val_angle_start_rand);
-value_set('arc_length', val_arc_length);
-value_set('arc_length_num', val_arc_length);
-value_set('alfa', val_alfa);
-value_set('alfa_num', val_alfa);
-value_set('line_stroke', val_stroke);
-value_set('line_stroke_num', val_stroke);
-combo_set('line_cap', val_line_cap);
-check_set('inverted_fade', val_inverted_fade);
-value_set('dist_fade', val_dist_fade);
-value_set('dist_fade_num', val_dist_fade);
-combo_set('shader', val_shader);
-value_set('steps', val_steps);
-value_set('steps_num', val_steps);
-value_set('walk_steps', val_walk_steps);
-value_set('walk_steps_num', val_walk_steps);
-change_shader(0);
-check_set('shader_filled', val_shader_filled);
+update_controls();
+value_set('canvas_color', 'orange');
 value_enable('play', 0);
 value_enable('orig', 0);
 value_enable('save', 0);
 value_enable('restart', 0);
 button_refresh('play');
 button_refresh('orig');
+combo_set('preset',0);
+combo_set('start',0);
 
 function value_get(id)
 {
@@ -333,6 +334,100 @@ function value_range(val, min, max)
 var img_original;
 var img_painting;
 var img_painting_loaded;
+
+var preset_data = [
+[ "val_shader" ],
+[ "val_shader_filled" ],
+[ "val_alfa" ],
+[ "val_line_width" ],
+[ "val_line_cap" ],
+[ "val_pixel_start_dist" ],
+[ "val_pixel_dist" ],
+[ "val_pixel_similiar" ],
+[ "val_angle_start" ],
+[ "val_angle_start_rand" ],
+[ "val_arc_length" ],
+[ "val_dist_fade" ],
+[ "val_inverted_fade" ],
+[ "val_steps" ],
+[ "val_walk_steps" ],
+];
+
+function update_controls()
+{
+	value_set('pixel_dist', val_pixel_dist);
+	value_set('pixel_dist_num', val_pixel_dist);
+	value_set('pixel_start_dist', val_pixel_start_dist);
+	value_set('pixel_start_dist_num', val_pixel_start_dist);
+	value_set('pixel_similiar', val_pixel_similiar);
+	value_set('pixel_similiar_num', val_pixel_similiar);
+	value_set('angle_start', val_angle_start);
+	value_set('angle_start_num', val_angle_start);
+	value_set('angle_start_rand', val_angle_start_rand);
+	value_set('angle_start_rand_num', val_angle_start_rand);
+	value_set('arc_length', val_arc_length);
+	value_set('arc_length_num', val_arc_length);
+	value_set('alfa', val_alfa);
+	value_set('alfa_num', val_alfa);
+	value_set('line_width', val_line_width);
+	value_set('line_width_num', val_line_width);
+	combo_set('line_cap', val_line_cap);
+	check_set('inverted_fade', val_inverted_fade);
+	value_set('dist_fade', val_dist_fade);
+	value_set('dist_fade_num', val_dist_fade);
+	combo_set('shader', val_shader);
+	value_set('steps', val_steps);
+	value_set('steps_num', val_steps);
+	value_set('walk_steps', val_walk_steps);
+	value_set('walk_steps_num', val_walk_steps);
+	change_shader(val_shader);
+	check_set('shader_filled', val_shader_filled);
+}
+
+var preset_library = [
+// basic lines
+	[ "val_shader=0;val_shader_filled=1;val_alfa=71;val_line_width=4;val_line_cap=2;val_pixel_start_dist=4;val_pixel_dist=22;val_pixel_similiar=2;val_angle_start=0;val_angle_start_rand=359;val_arc_length=360;val_dist_fade=100;val_inverted_fade=0;val_steps=50;val_walk_steps=10;" ],
+// rough scatch
+	[ "val_shader=4;val_shader_filled=1;val_alfa=100;val_line_width=1;val_line_cap=1;val_pixel_start_dist=28;val_pixel_dist=76;val_pixel_similiar=2;val_angle_start=228;val_angle_start_rand=32;val_arc_length=150;val_dist_fade=100;val_inverted_fade=1;val_steps=10;val_walk_steps=138;" ],
+// hatched shade
+	[ " val_shader=0;val_shader_filled=1;val_alfa=29;val_line_width=1;val_line_cap=1;val_pixel_start_dist=8;val_pixel_dist=28;val_pixel_similiar=2;val_angle_start=45;val_angle_start_rand=12;val_arc_length=13;val_dist_fade=0;val_inverted_fade=0;val_steps=200;val_walk_steps=10;" ],
+// recursive lines
+	[ "val_shader=4;val_shader_filled=1;val_alfa=34;val_line_width=1;val_line_cap=1;val_pixel_start_dist=8;val_pixel_dist=14;val_pixel_similiar=3;val_angle_start=0;val_angle_start_rand=359;val_arc_length=360;val_dist_fade=46;val_inverted_fade=0;val_steps=3;val_walk_steps=50;" ],
+// blurred water color
+	[ "val_shader=3;val_shader_filled=1;val_alfa=10;val_line_width=1;val_line_cap=1;val_pixel_start_dist=5;val_pixel_dist=15;val_pixel_similiar=7;val_angle_start=0;val_angle_start_rand=359;val_arc_length=360;val_dist_fade=100;val_inverted_fade=0;val_steps=100;val_walk_steps=10;" ],
+// triangles fillup
+	[ "val_shader=1;val_shader_filled=1;val_alfa=100;val_line_width=1;val_line_cap=1;val_pixel_start_dist=44;val_pixel_dist=66;val_pixel_similiar=2;val_angle_start=0;val_angle_start_rand=359;val_arc_length=360;val_dist_fade=100;val_inverted_fade=0;val_steps=10;val_walk_steps=10;" ],
+// horizontal lines
+	[ "val_shader=0;val_shader_filled=1;val_alfa=100;val_line_width=3;val_line_cap=2;val_pixel_start_dist=6;val_pixel_dist=24;val_pixel_similiar=40;val_angle_start=90;val_angle_start_rand=0;val_arc_length=1;val_dist_fade=100;val_inverted_fade=0;val_steps=40;val_walk_steps=10;" ],
+// hatched shade
+];
+
+function preset_save()
+{
+	var c = preset_data.length, a;
+	var str = "";
+	for (a = 0; a < c; a++)
+		str += preset_data[a]+"="+eval(""+preset_data[a]+"")+";";
+	alert("this is your preset data:\n\n"+str);
+}
+
+function preset_load(str)
+{
+	if (str == "")
+	{
+		str = prompt("enter your preset data: ", "");
+		if (str == "") return;
+	}
+	var s_str = ""+str;
+	var vals = s_str.split(';'), a, c = vals.length;
+	if (!c) return;
+	
+	for (a = 0; a < c; a++)
+	{
+		eval(""+vals[a]+"");
+	}
+	update_controls();
+}
 
 function snap_painting(canvas)
 {
@@ -393,11 +488,25 @@ function button_change(obj)
 
 function combo_change(obj)
 {
+	var val_preset, len;
+
 	switch (obj.id)
 	{
 		case 'shader': change_shader( obj.selectedIndex ); break;
 		case 'start' : val_start_canvas = obj.selectedIndex; break;
 		case 'line_cap' : val_line_cap = obj.selectedIndex; break;
+		case 'preset' :
+			len = obj.length;
+			val_preset = obj.selectedIndex;
+			if (val_preset == len - 2) preset_save();
+			else
+			if (val_preset == len - 1) preset_load("");
+			else
+			if (val_preset >= 2 && val_preset < len - 3)
+				preset_load(preset_library[val_preset - 2]);
+
+			combo_set('preset', 0);
+			break;
 	}
 }
 
@@ -456,7 +565,7 @@ function value_change(obj)
 
 		case 'arc_length':
 		case 'arc_length_num':
-									val = value_range(val, 0, 360);
+									val = value_range(val, 1, 360);
 									value_set("arc_length_num", val);
 									value_set("arc_length", val);
 									val_arc_length = val;
@@ -478,12 +587,12 @@ function value_change(obj)
 									val_alfa = val;
 									break;
 
-		case 'line_stroke':
-		case 'line_stroke_num':
+		case 'line_width':
+		case 'line_width_num':
 									val = value_range(val, 1, 100);
-									value_set("line_stroke_num", val);
-									value_set("line_stroke", val);
-									val_stroke = val;
+									value_set("line_width_num", val);
+									value_set("line_width", val);
+									val_line_width = val;
 									break;
 
 		case 'dist_fade':
@@ -508,6 +617,12 @@ function value_change(obj)
 									value_set('walk_steps', val);
 									value_set('walk_steps_num', val);
 									val_walk_steps = val;
+									break;
+
+		case 'canvas_color':
+									(document.getElementById('canvas_color_td')).style.backgroundColor = obj.value;
+									val_canvas_color.str = (document.getElementById('canvas_color_td')).style.backgroundColor;
+									(document.getElementById('canvas_color_option')).style.backgroundColor = val_canvas_color.str;
 									break;
 	}
 
@@ -623,8 +738,9 @@ var DVAPI = 2*Math.PI;
 
 function get_alfa(dist)
 {
-	var alfa = val_alfa*(dist - val_pixel_start_dist ) / ( 100 * (val_pixel_dist - val_pixel_start_dist) );
-	if (val_inverted_fade) alfa = 1 - alfa;
+	var alfa = (0.01 + dist - val_pixel_start_dist ) / ( val_pixel_dist - val_pixel_start_dist );
+	if (!val_inverted_fade) alfa = 1 - alfa;
+	alfa = (val_alfa * alfa) / 100;
 	alfa = ( val_alfa * (100 - val_dist_fade) ) / (100*100) + ( alfa * val_dist_fade ) / 100;
 
 	return (alfa);
@@ -644,7 +760,7 @@ function animate_paint(canvas, context)
 
 	if (painting_refresh)
 	{
-		rect(context, 0, 0, x_res, y_res, 1, col_white, 1);
+		//rect(context, 0, 0, x_res, y_res, 1, col_white, 1);
 		painting_refresh = 0;
 		context.globalAlpha = 1;
 		context.drawImage(img_painting, 0, 0, x_res, y_res);
@@ -653,7 +769,7 @@ function animate_paint(canvas, context)
 	if (painting_restart)
 	{
 		painting_restart = 0;
-		rect(context, 0, 0, x_res, y_res, 1, !val_start_canvas ? col_white : col_black, 1);
+		rect(context, 0, 0, x_res, y_res, 1, val_start_canvas == 2 ? val_canvas_color : !val_start_canvas ? col_white : col_black, 1);
 	}
 
 	context.lineCap="round";
@@ -709,7 +825,7 @@ function animate_paint(canvas, context)
 				if (found)
 				{
 					alfa = get_alfa(dist);
-					line(context, x, y, xx, yy, col, alfa, val_stroke, val_line_cap);
+					line(context, x, y, xx, yy, col, alfa, val_line_width, val_line_cap);
 					x = xx; y = yy;
 				}
 			}
@@ -720,10 +836,10 @@ function animate_paint(canvas, context)
 			alfa = get_alfa(dist);
 			switch (val_shader)
 			{
-				case SHADER_LINE: line(context, x, y, xx, yy, col, alfa, val_stroke, val_line_cap); break;
-				case SHADER_TRIANGLE: triangle(context, x, y, xx, yy, xxx, yyy, val_shader_filled, col, alfa, val_stroke); break;
-				case SHADER_CIRCLE: circle(context, (x+xx)/2, (y+yy)/2, Math.sqrt((xx-x+1)*(xx-x+1) + (yy-y+1)*(yy-y+1)), val_shader_filled, col, alfa, val_stroke); break;
-				case SHADER_BOX: rect(context, x, y, xx-x+1, yy-y+1, val_shader_filled, col, alfa, val_stroke); break;
+				case SHADER_LINE: line(context, x, y, xx, yy, col, alfa, val_line_width, val_line_cap); break;
+				case SHADER_TRIANGLE: triangle(context, x, y, xx, yy, xxx, yyy, val_shader_filled, col, alfa, val_line_width); break;
+				case SHADER_CIRCLE: circle(context, (x+xx)/2, (y+yy)/2, Math.sqrt((xx-x+1)*(xx-x+1) + (yy-y+1)*(yy-y+1)), val_shader_filled, col, alfa, val_line_width); break;
+				case SHADER_BOX: rect(context, x, y, xx-x+1, yy-y+1, val_shader_filled, col, alfa, val_line_width); break;
 			}
 		}
 	}
@@ -786,7 +902,7 @@ function paint(face_img)
 	var imageData = context.getImageData(0, 0, x_res, y_res);
 	img_data = imageData.data;
 
-	rect(context, 0, 0, x_res, y_res, 1, !val_start_canvas ? col_white : col_black, 1);
+	rect(context, 0, 0, x_res, y_res, 1, val_start_canvas == 2 ? val_canvas_color : !val_start_canvas ? col_white : col_black, 1);
 
 	painting_start();
 	img_original = face_img;
