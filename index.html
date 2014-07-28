@@ -18,7 +18,7 @@
 <body background="bg.gif">
 <header style="min-width:100%;">
 <table>
-<tr><td class=title width=100% style="white-space: nowrap;">GEOMETRIC <fx style="color:#804000">//</fx> PHOTO FILTER <fx style="color:#F08000">/  /    /</fx></td><td align=right style="white-space: nowrap;">© 2014 <a target="_blank" href="http://Zd3N.com">Zd3N.com</a> <a target="_blank" href="http://satori.sk">Satori SK</a> | <a target="_blank" href="http://github.org/zden/face.haluska.sk">source</a><br>ver. 1.05 | July/22/2014 | <a href="changelog.md" target="_blank">changelog</a></td></tr>
+<tr><td class=title width=100% style="white-space: nowrap;">GEOMETRIC <fx style="color:#804000">//</fx> PHOTO FILTER <fx style="color:#F08000">/  /    /</fx></td><td align=right style="white-space: nowrap;">© 2014 <a target="_blank" href="http://Zd3N.com">Zden</a> | <a target="_blank" href="http://satori.sk">Satori SK</a> | <a target="_blank" href="http://github.org/zden/face.haluska.sk">source</a><br>ver. 1.10 | July/29/2014 | <a href="changelog.md" target="_blank">changelog</a></td></tr>
 </table>
 </header>
 <style>
@@ -59,6 +59,16 @@ td.title {
 #holder { border: 2px dashed #ccc; border-color: #BBE0FA; width: 640px; height: 640px; margin: 20px auto; position: absolute; top: 48px; left: 440px; }
 #holder.hover { border: 2px dashed #333; }
 #holder.paint { border: 2px; }
+
+#video_capture {
+    width: 640px;
+    height: 640px;
+    background-color: transparent;
+}
+
+#video_div { border: 2px dashed #ccc; border-color: transparent; width: 640px; height: 640px; margin: 20px auto; position: absolute; top: 48px; left: 440px;
+	visibility: hidden;
+}
 
 a {
 	color: #206080;
@@ -116,6 +126,9 @@ a:hover {
 		</tr>
 	<tr><td>Filled Shader:</td><td><input id="shader_filled" type="checkbox" value="0" onchange=value_change(this) /></td><td></td><td></td><tr>
 	<tr><td>Alfa:</td><td><input id="alfa" type="range" min="0" max="100" value="100" onchange=value_change(this) /></td><td><input style="width:64px;" id="alfa_num" type="number" min="0" max="100" value="100" onchange=value_change(this) /></td></tr>	
+	<tr><td colspan=4></td></tr>
+	<tr><td bgcolor="#EED000" colspan=4></td></tr>
+	<tr><td colspan=4></td></tr>
 	<tr><td>Line Width:</td><td><input id="line_width" type="range" min="1" max="100" value="1" onchange=value_change(this) /></td><td><input style="width:64px;" id="line_width_num" type="number" min="1" max="100" value="1" onchange=value_change(this) /></td></tr>	
 	<tr><td>Line Cap:</td><td><select style="width:105px;" id='line_cap' onChange=combo_change(this)>
 			<option>Butt</option>
@@ -123,6 +136,9 @@ a:hover {
 			<option>Square</option>
 		</select>
 	</td></tr>	
+	<tr><td>Gradient:</td><td><input id="gradient" type="checkbox" value="0" onchange=value_change(this) /></td><td></td><td></td><tr>
+	<tr><td>Alfa End:</td><td><input id="alfa_end" type="range" min="0" max="100" value="100" onchange=value_change(this) /></td><td><input style="width:64px;" id="alfa_end_num" type="number" min="0" max="100" value="100" onchange=value_change(this) /></td></tr>
+	<tr><td colspan=4><fx style="color:#808080; font-size: 8pt;">Alfa End works with Gradients only.</fx>
 	<tr><td colspan=4></td></tr>
 	<tr><td bgcolor="#EED000" colspan=4></td></tr>
 	<tr><td colspan=4></td></tr>
@@ -131,22 +147,28 @@ a:hover {
 	<tr><td>Color Similiarity:</td><td><input id="pixel_similiar" type="range" min="1" max="128" value="1" onchange=value_change(this) /></td><td><input style="width:64px;" id="pixel_similiar_num" type="number" min="1" max="128" value="1" onchange=value_change(this) /></td></tr>
 	<tr><td colspan=4><fx style="color:#808080; font-size: 8pt;">Value represents maximal difference between R/G/B components.<br>The lower the value, the more exact color you seek.</fx>
 	<tr><td colspan=4></td></tr>
-	<tr><td bgcolor="#EED800" colspan=4></td></tr>
+	<tr><td bgcolor="#EED400" colspan=4></td></tr>
 	<tr><td colspan=4></td></tr>
 	<tr><td>Start Angle:</td><td><input id="angle_start" type="range" min="0" max="359" value="0" onchange=value_change(this) /></td><td><input style="width:64px;" id="angle_start_num" type="number" min="0" max="359" value="0" onchange=value_change(this) /></td></tr>
 	<tr><td>Start Angle Randomize:</td><td><input id="angle_start_rand" type="range" min="0" max="359" value="359" onchange=value_change(this) /></td><td><input style="width:64px;" id="angle_start_rand_num" type="number" min="0" max="359" value="356" onchange=value_change(this) /></td></tr>
 	<tr><td>Arc Length:</td><td><input id="arc_length" type="range" min="1" max="360" value="360" onchange=value_change(this) /></td><td><input style="width:64px;" id="arc_length_num" type="number" min="1" max="360" value="360" onchange=value_change(this) /></td></tr>
 	<tr><td colspan=4></td></tr>
-	<tr><td bgcolor="#EEE000" colspan=4></td></tr>
+	<tr><td bgcolor="#EED800" colspan=4></td></tr>
 	<tr><td colspan=4></td></tr>
 	<tr><td>Fade by Distance:</td><td><input id="dist_fade" type="range" min="0" max="100" value="100" onchange=value_change(this) /></td><td><input style="width:64px;" id="dist_fade_num" type="number" min="0" max="100" value="100" onchange=value_change(this) /></td></tr>
 	<tr><td>Inverted Fade:</td><td><input id="inverted_fade" type="checkbox" value="0" onchange=value_change(this) /></td><td></td><td></td><tr>
 	<tr><td colspan=4></td></tr>
-	<tr><td bgcolor="#EEE800" colspan=4></td></tr>
+	<tr><td bgcolor="#EEDB00" colspan=4></td></tr>
 	<tr><td colspan=4></td></tr>
-	<tr><td>Steps per Frame: <fx style="color:#F02020; font-size: 8pt;">*</fx></td><td><input id="steps" type="range" min="1" max="256" value="10" onchange=value_change(this) /></td><td><input style="width:64px;" id="steps_num" type="number" min="1" max="256" value="10" onchange=value_change(this) /></td></tr>
-	<tr><td>Max Steps per Walk: <fx style="color:#F02020; font-size: 8pt;">*</fx></td><td><input id="walk_steps" type="range" min="2" max="256" value="10" onchange=value_change(this) /></td><td><input style="width:64px;" id="walk_steps_num" type="number" min="2" max="256" value="10" onchange=value_change(this) /></td></tr>
-	<tr><td colspan=4><fx style="color:#F02020; font-size: 8pt;">* Careful with steps parameters. Higher values on really slow computer might brick your browser.</fx>
+	<tr><td>Hue:</td><td><input id="hue" type="range" min="0" max="384" value="0" onchange=value_change(this) /></td><td><input style="width:64px;" id="hue_num" type="number" min="0" max="384" value="0" onchange=value_change(this) /></td></tr>
+	<tr><td>Saturation:</td><td><input id="saturation" type="range" min="0" max="256" value="128" onchange=value_change(this) /></td><td><input style="width:64px;" id="saturation_num" type="number" min="0" max="256" value="128" onchange=value_change(this) /></td></tr>	
+	<tr><td colspan=4><fx style="color:#808080; font-size: 8pt;">Values lower than 128 turns colors to gray tones.</fx>
+	<tr><td colspan=4></td></tr>
+	<tr><td bgcolor="#EEE000" colspan=4></td></tr>
+	<tr><td colspan=4></td></tr>
+	<tr><td>Steps per Frame: <fx style="color:#F02020; font-size: 8pt;"></fx></td><td><input id="steps" type="range" min="1" max="256" value="10" onchange=value_change(this) /></td><td><input style="width:64px;" id="steps_num" type="number" min="1" max="256" value="10" onchange=value_change(this) /></td></tr>
+	<tr><td>Max Steps per Walk: <fx style="color:#F02020; font-size: 8pt;"></fx></td><td><input id="walk_steps" type="range" min="2" max="256" value="10" onchange=value_change(this) /></td><td><input style="width:64px;" id="walk_steps_num" type="number" min="2" max="256" value="10" onchange=value_change(this) /></td></tr>
+	<tr><td colspan=4><fx style="color:#F07000; font-size: 8pt;"> Supporting WebWorkers. Higher values may slow down painting but will not brick your browser.</fx>
 	<tr><td colspan=4></td></tr>
 	<tr><td bgcolor="#D0D0D0" colspan=4></td></tr>
 	<tr><td colspan=4></td></tr>
@@ -172,49 +194,24 @@ a:hover {
 	<b>Future:</b><br><desc style="color:#505070">If you like the filter <a href="http://www.facebook.com/GeometricPhotoFilter">share your interest or creations</a>. I have a couple of ideas to progress this further. Some of them are about the new parameters to control colors or extend Walk feature to other primitives. I am especially interested to implement ability to record all your actions with feature to reapply these steps on another picture which gives a possibility for motion video application.</desc><p>
 	</td></tr>
 	<tr><td>
-	<div id="social" style="position: relative; top: 16; visibility: visible; z-index: 99">
-<div id="fb-root"></div>
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) return;
-  js = d.createElement(s); js.id = id;
-  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=160423367472864";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>
-
-<div class="fb-like" data-href="http://face.haluska.sk" data-layout="box_count" data-action="like" data-show-faces="true" data-share="true"></div>
-&nbsp;
-<a href="https://twitter.com/share" class="twitter-share-button" data-lang="en" data-count="vertical" data-url="http://face.haluska.sk">Tweet</a>
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-&nbsp;
-<!-- Place this tag where you want the +1 button to render. -->
-<div class="g-plusone" data-size="tall" data-href="http://face.haluska.sk"></div>
-
-<!-- Place this tag after the last +1 button tag. -->
-<script type="text/javascript">
-  (function() {
-    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
-    po.src = 'https://apis.google.com/js/platform.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
-  })();
-</script>
-&nbsp;
-<script src="//platform.linkedin.com/in.js" type="text/javascript">
-  lang: en_US
-</script>
-<script type="IN/Share" data-counter="top"></script>
-<p>
-	</div>
 	</td></tr>
 	</table></td></tr>
 </table>
   </div>
   <div style="position: absolute;top:340px;left:690px;"><p class=drop>[&nbsp;drop&nbsp;image&nbsp;]</p></div>
+  <div style="position: absolute;top:690;left:435;z-index:99;visibility:hidden" id="divcapture"><p class=drop>
+	<label for="capture" class="captureButton">[ camera capture ]</label>
+	<input style="opacity:0" accept="image/*" name="capture" id="capture" capture="camera" onclick="camera_start();"><br>
+	</div>
+	<div style="position: absolute;top:724;left:705;z-index:99;visibility:hidden" id="divcapture_con"><input type="button" value="&#9679;&nbsp;SNAP" id="snap">&nbsp;&nbsp;<input type="button" value="&#9632;&nbsp;STOP" id="stop"></div>
   <div style="position: absolute;top:690;left:862;z-index:99;" id="divupload"><p class=drop>
 	<label for="upload" class="uploadButton">[ upload image ]</label>
 	<input style="opacity:0" type="file" name="upload" id="upload">
 	</div>
-  <div id="holder"><canvas id='face' width=640 height=640 style='position:relative;'></canvas></div> 
+  <div id="holder"><canvas id='face' width=640 height=640 style='position:relative;'></canvas></div>
+  <div id="video_div"><video autoplay="" id="video_capture">
+  
+  </video></div>
 </article>
 
 <script>
@@ -227,8 +224,12 @@ var val_pixel_start_dist = 8, val_pixel_dist = 64;
 var val_pixel_similiar = 2;
 var val_angle_start = 0, val_angle_start_rand = 359, val_arc_length = 360;
 var val_alfa = 100;
+var val_alfa_end = 100;
+var val_gradient = 0;
 var val_line_width = 1;
 var val_line_cap = 1;
+var val_hue = 0;
+var val_saturation = 128;
 var val_dist_fade = 100;
 var val_inverted_fade = 0;
 var val_steps = 10;
@@ -279,6 +280,7 @@ function button_refresh(id)
 function painting_start()
 {
 	val_orig = 0; val_play = 1;
+	button_refresh('play');
 	painting_snap = painting_refresh = 0;
 	img_painting_loaded = 0;
 	button_refresh('play');
@@ -298,11 +300,7 @@ var SHADER_WALK = 4;
 function change_shader(sh)
 {
 	val_shader = sh;
-
-	value_enable("walk_steps", val_shader == SHADER_WALK);
-	value_enable("walk_steps_num", val_shader == SHADER_WALK);
-	value_enable("shader_filled", val_shader == SHADER_TRIANGLE || val_shader == SHADER_BOX || val_shader == SHADER_CIRCLE);
-
+	refresh_enabled();
 	combo_set("shader", sh);
 }
 
@@ -341,6 +339,10 @@ var preset_data = [
 [ "val_alfa" ],
 [ "val_line_width" ],
 [ "val_line_cap" ],
+[ "val_gradient" ],
+[ "val_alfa_end" ],
+[ "val_hue" ],
+[ "val_saturation" ],
 [ "val_pixel_start_dist" ],
 [ "val_pixel_dist" ],
 [ "val_pixel_similiar" ],
@@ -369,8 +371,15 @@ function update_controls()
 	value_set('arc_length_num', val_arc_length);
 	value_set('alfa', val_alfa);
 	value_set('alfa_num', val_alfa);
+	value_set('alfa_end', val_alfa_end);
+	value_set('alfa_end_num', val_alfa_end);
 	value_set('line_width', val_line_width);
 	value_set('line_width_num', val_line_width);
+	check_set('gradient', val_gradient);
+	value_set('hue', val_hue);
+	value_set('hue_num', val_hue);
+	value_set('saturation', val_saturation);
+	value_set('saturation_num', val_saturation);
 	combo_set('line_cap', val_line_cap);
 	check_set('inverted_fade', val_inverted_fade);
 	value_set('dist_fade', val_dist_fade);
@@ -382,6 +391,8 @@ function update_controls()
 	value_set('walk_steps_num', val_walk_steps);
 	change_shader(val_shader);
 	check_set('shader_filled', val_shader_filled);
+
+	refresh_enabled();
 }
 
 var preset_library = [
@@ -510,6 +521,18 @@ function combo_change(obj)
 	}
 }
 
+function refresh_enabled()
+{
+	value_enable("walk_steps", val_shader == SHADER_WALK);
+	value_enable("walk_steps_num", val_shader == SHADER_WALK);
+	value_enable("shader_filled", val_shader == SHADER_TRIANGLE || val_shader == SHADER_BOX || val_shader == SHADER_CIRCLE);
+	value_enable("line_cap", val_shader == SHADER_LINE || val_shader == SHADER_WALK || (val_shader == SHADER_BOX && !val_shader_filled));
+	value_enable('line_width', !val_shader_filled || (val_shader == SHADER_LINE || val_shader == SHADER_WALK));
+	value_enable('line_width_num', !val_shader_filled || (val_shader == SHADER_LINE || val_shader == SHADER_WALK));
+	value_enable('alfa_end', val_gradient);
+	value_enable('alfa_end_num', val_gradient);
+}
+
 function value_change(obj)
 {
 	var val = Math.floor(obj.value);
@@ -575,8 +598,14 @@ function value_change(obj)
 									val_inverted_fade = Math.floor( obj.checked );
 									break;
 
+		case 'gradient':
+									val_gradient = Math.floor ( obj.checked );
+									refresh_enabled();
+									break;
+
 		case 'shader_filled':
 									val_shader_filled = Math.floor( obj.checked );
+									refresh_enabled();
 									break;
 
 		case 'alfa':
@@ -587,12 +616,36 @@ function value_change(obj)
 									val_alfa = val;
 									break;
 
+		case 'alfa_end':
+		case 'alfa_end_num':
+									val = value_range(val, 0, 100);
+									value_set("alfa_end_num", val);
+									value_set("alfa_end", val);
+									val_alfa_end = val;
+									break;
+
 		case 'line_width':
 		case 'line_width_num':
 									val = value_range(val, 1, 100);
 									value_set("line_width_num", val);
 									value_set("line_width", val);
 									val_line_width = val;
+									break;
+
+		case 'hue':
+		case 'hue_num':
+									val = value_range(val, 0, 384);
+									value_set("hue_num", val);
+									value_set("hue", val);
+									val_hue = val;
+									break;
+
+		case 'saturation':
+		case 'saturation_num':
+									val = value_range(val, 0, 256);
+									value_set("saturation_num", val);
+									value_set("saturation", val);
+									val_saturation = val;
 									break;
 
 		case 'dist_fade':
@@ -633,10 +686,22 @@ var holder = document.getElementById('holder');
 if (typeof window.FileReader === 'undefined')
 	alert("File API & FileReader is not available.\nYou can't drag and drop images to process filter.");
 
-function line(con_, xs, ys, xe, ye, col, alfa, stroke, cap)
+function line(con_, xs, ys, xe, ye, col, col_end, alfa, alfa_end, stroke, cap, grad)
 {
 	con_.lineWidth = stroke;
-	con_.strokeStyle = col.str;
+	var ae;
+
+	if (!grad)
+		con_.strokeStyle = col.str;
+	else
+	{
+		gradient = con_.createLinearGradient(xs, ys, xe, ye);
+		gradient.addColorStop(0, col.str);
+		ae = (alfa*alfa_end)/100;
+		//console.log(ae+ " " + alfa + " " + alfa_end);
+		gradient.addColorStop(1, 'rgba('+col_end.r+', '+col_end.g+', '+col_end.b+', '+ae+')');
+		con_.strokeStyle = gradient;
+	}
 	con_.globalAlpha = alfa;
 	con_.lineCap= !cap ? "butt" : cap == 1 ? "round" : "square";
 	con_.beginPath();
@@ -645,25 +710,40 @@ function line(con_, xs, ys, xe, ye, col, alfa, stroke, cap)
 	con_.stroke();
 }
 
-function circle(context, x, y, r, filled, col, alfa, stroke)
+function circle(con_, x, y, r, filled, col, col_end, alfa, alfa_end, stroke, grad)
 {
-	context.lineWidth = stroke;
-	context.globalAlpha = alfa;
-	context.beginPath();
-	context.arc(x, y, r, 0, 2 * Math.PI, false);
+	con_.lineWidth = stroke;
+	con_.globalAlpha = alfa;
+	con_.beginPath();
+	con_.arc(x, y, r, 0, 2 * Math.PI, false);
+	var ae;
+	
+	if (grad)
+	{
+		if (filled)
+			gradient = con_.createRadialGradient(x, y, 0, x, y, r);
+		else
+			gradient = con_.createRadialGradient(x, y, r-stroke/2 < 0 ? 0 : r - stroke/2, x, y, r+stroke/2);
+		gradient.addColorStop(0, col.str);
+		ae = (alfa*alfa_end)/100;
+		gradient.addColorStop(1, 'rgba('+col_end.r+', '+col_end.g+', '+col_end.b+', '+ae+')');
+		con_.fillStyle = gradient;
+	}
+
 	if (filled)
 	{
-		context.fillStyle = col.str;
-		context.fill();
+		con_.fillStyle = !grad ? col.str : gradient;
+		con_.fill();
 	}
 	else
 	{
-		context.strokeStyle = col.str;
-		context.stroke();
+		con_.globalAlpha = alfa;
+		con_.strokeStyle = !grad ? col.str : gradient;
+		con_.stroke();
 	}
 }
 
-function triangle(con_, x1, y1, x2, y2, x3, y3, filled, col, alfa, stroke)
+function triangle(con_, x1, y1, x2, y2, x3, y3, filled, col, col_mid, col_end, alfa, alfa_end, stroke, grad)
 {
 	con_.lineWidth = stroke;
 	con_.beginPath();
@@ -671,18 +751,86 @@ function triangle(con_, x1, y1, x2, y2, x3, y3, filled, col, alfa, stroke)
 	con_.lineTo(x2, y2);
 	con_.lineTo(x3, y3);
 	con_.lineTo(x1, y1);
-	con_.strokeStyle = col.str;
 	con_.globalAlpha = alfa;
 	con_.closePath();
+	var ae;
+	
+	if (grad)
+	{
+		if (filled)
+		{
+			gradient = con_.createLinearGradient(x1, y1, x2, y2);
+			gradient.addColorStop(0, col.str);
+			ae = (alfa*alfa_end)/100;
+			gradient.addColorStop(1, 'rgba('+col_mid.r+', '+col_mid.g+', '+col_mid.b+', '+ae+')');
+			con_.fillStyle = gradient;
+			con_.globalAlpha = alfa;
+			con_.fill();
+			gradient = con_.createLinearGradient(x1, y1, x3, y3);
+			gradient.addColorStop(0, 'rgba('+col.r+', '+col.g+', '+col.b+', 0)');
+			gradient.addColorStop(1, 'rgba('+col_end.r+', '+col_end.g+', '+col_end.b+', '+ae+')');
+			con_.fillStyle = gradient;
+			con_.globalAlpha = alfa/2;
+			con_.fill();
+		}
+		else
+		{
+			line(con_, x1, y1, x2, y2, col, col_mid, alfa, alfa_end, stroke, 1, grad);
+			line(con_, x2, y2, x3, y3, col_mid, col_end, alfa, alfa_end, stroke, 1, grad);
+			line(con_, x3, y3, x1, y1, col_end, col, alfa, alfa_end, stroke, 1, grad);
+		}
+	}
+	else
 	if (filled)
 	{
-		con_.fillStyle = col.str;
+		con_.fillStyle = grad ? gradient : col.str;
 		con_.fill();
 	}
 	else
 	{
-		context.strokeStyle = col.str;
+		context.strokeStyle = grad ? gradient : col.str;
 		context.stroke();
+	}
+}
+
+function rect(con_, x1, y1, wid, hei, filled, col, col_end, alfa, alfa_end, stroke, grad)
+{
+	if (grad && !filled)
+	{
+		line(con_, x1, y1, x1+wid, y1, col, col_end, alfa, alfa_end, stroke, val_line_cap, 1);
+		line(con_, x1+wid, y1, x1+wid, y1+hei, col_end, col, alfa, alfa_end, stroke, val_line_cap, 1);
+		line(con_, x1+wid, y1+hei, x1, y1+hei, col, col_end, alfa, alfa_end, stroke, val_line_cap, 1);
+		line(con_, x1, y1+hei, x1, y1, col_end, col, alfa, alfa_end, stroke, val_line_cap, 1);
+		
+		return;
+	}
+
+	con_.lineWidth = stroke;
+	con_.beginPath();
+	con_.globalAlpha = alfa;
+
+	con_.rect(x1, y1, wid, hei);
+	
+	var ae;
+
+	if (filled)
+	{
+		if (!grad)
+			con_.fillStyle = col.str;
+		else
+		{
+			gradient = con_.createLinearGradient(x1, y1, x1+wid, y1+hei);
+			gradient.addColorStop(0, col.str);
+			ae = (alfa*alfa_end)/100;
+			gradient.addColorStop(1, 'rgba('+col_end.r+', '+col_end.g+', '+col_end.b+', '+ae+')');
+			con_.fillStyle = gradient;
+		}
+		con_.fill(); 
+	}
+	else
+	{
+		con_.strokeStyle = col.str;
+		con_.stroke();
 	}
 }
 
@@ -693,34 +841,92 @@ function rgbColor(r,g,b)
 
 function RGB(r,g,b)
 {
-	this.r = r/255;
-	this.g = g/255;
-	this.b = b/255;
+	this.r = r;
+	this.g = g;
+	this.b = b;
 	this.str = 'rgb(' + r + ',' + g + ',' + b + ')';
 	return this;
+}
+
+function hue_satur(col)
+{
+	var r, g, b;
+	var l = val_hue;
+	var s = val_saturation;
+
+	if (l == 0)
+	{
+		r = col.r;
+		g = col.g;
+		b = col.b;
+	}
+	else
+	if (l > 0 && l <= 127)
+	{
+		r = (col.r*(127-l))/128 + (col.g*l)/128;
+		g = (col.g*(127-l))/128 + (col.b*l)/128;
+		b = (col.b*(127-l))/128 + (col.r*l)/128;
+	}
+	else
+	if (l >= 128 && l <= 255)
+	{
+		l -= 128;
+		r = (col.g*(127-l))/128 + (col.b*l)/128;
+		g = (col.b*(127-l))/128 + (col.r*l)/128;
+		b = (col.r*(127-l))/128 + (col.g*l)/128;
+	}
+	else
+	if (l >= 256 && l <= 384)
+	{
+		l -= 256;
+		r = (col.b*(127-l))/128 + (col.r*l)/128;
+		g = (col.r*(127-l))/128 + (col.g*l)/128;
+		b = (col.g*(127-l))/128 + (col.b*l)/128;
+	}
+
+	if (isNaN(r)) r = 0;
+	if (isNaN(g)) g = 0;
+	if (isNaN(b)) b = 0;
+
+	if (s != 128)
+	{
+		if (s < 128)
+		{
+			var gr = ((0.299*r + 0.587*g + 0.114*b)*(128 - s))/128 ;
+			r = gr + (r * s)/128;
+			g = gr + (g * s)/128;
+			b = gr + (b * s)/128;
+		}
+		else
+		{
+			s -= 128;
+			var str;
+
+			if (r > g && r > b)
+				str = 255 / r;
+			else
+			if (g > r && g > b)
+				str = 255 / g;
+			else
+				str = 255 / b;
+
+			r = ( ((r * str) * s) + (r * (128 - s)) )/128;
+			g = ( ((g * str) * s) + (g * (128 - s)) )/128;
+			b = ( ((b * str) * s) + (b * (128 - s)) )/128;
+			if (isNaN(r)) r = 0;
+			if (isNaN(g)) g = 0;
+			if (isNaN(b)) b = 0;
+		}
+	}
+
+	col.r = Math.floor(r); col.g = Math.floor(g); col.b = Math.floor(b);
+	col.str = 'rgb(' + col.r + ',' + col.g + ',' + col.b + ')';
+	return(col);
 }
 
 function rnd(n)
 {
   return Math.floor( Math.random() * n );
-}
-
-function rect(context, x1, y1, wid, hei, filled, col, alfa, stroke)
-{
-	context.lineWidth = stroke;
-	context.beginPath();
-	context.globalAlpha = alfa;
-	context.rect(x1, y1, wid, hei);
-	if (filled)
-	{
-		context.fillStyle = col.str;
-		context.fill(); 
-	}
-	else
-	{
-		context.strokeStyle = col.str;
-		context.stroke();
-	}
 }
 
 window.requestAnimFrame = (function(callback) {
@@ -730,10 +936,13 @@ window.requestAnimFrame = (function(callback) {
 	};
 })();
 
-var img;
+// ---------- image, image_data, basic cols ----------
+
+//var img;
 var img_data;
 var col_white = new RGB ( 255, 255, 255 );
 var col_black = new RGB ( 0, 0, 0 );
+
 var DVAPI = 2*Math.PI;
 
 function get_alfa(dist)
@@ -746,14 +955,65 @@ function get_alfa(dist)
 	return (alfa);
 }
 
-// actual algo \o/
-// written by Zden Hlinka, Jun-July 2014 (C) Satori, s.r.o., All right reserved., zden@satori.sk
-// for non-commercial, artistic and educational use only
+// ---------- filter worker ----------
+
+var worker = new Worker('filter.js');
+worker.postMessage({cmd:'start'});
+
+// ---------- worker "callback" used to paint all calculated shapes ----------
+
+worker.addEventListener('message', function(e) {
+	var a, c, d, p;
+
+	d = e.data.out;
+	c = d.length;
+	switch (e.data.shader)
+	{
+		case SHADER_LINE:
+		case SHADER_WALK:
+			for (a = 0; a < c; a++)
+			{
+				p = d[a];
+				line(context, p.x, p.y, p.xx, p.yy, hue_satur(p.col), hue_satur(p.col_end), p.alfa, val_alfa_end, val_line_width, val_line_cap, val_gradient);
+			}
+			break;
+		case SHADER_TRIANGLE:
+			for (a = 0; a < c; a++)
+			{
+				p = d[a];
+				triangle(context, p.x, p.y, p.xx, p.yy, p.xxx, p.yyy, val_shader_filled, hue_satur(p.col), hue_satur(p.col_end), hue_satur(p.col_mid), p.alfa, val_alfa_end, val_line_width, val_gradient);
+			}
+			break;
+		case SHADER_CIRCLE:
+			for (a = 0; a < c; a++)
+			{
+				p = d[a];
+				circle(context, p.x, p.y, p.r, val_shader_filled, hue_satur(p.col), hue_satur(p.col_end), p.alfa, val_alfa_end, val_line_width, val_gradient);
+			}
+			break;
+		case SHADER_BOX:
+			for (a = 0; a < c; a++)
+			{
+				p = d[a];
+				rect(context, p.x, p.y, p.xx, p.yy, val_shader_filled, hue_satur(p.col), hue_satur(p.col_end), p.alfa, val_alfa_end, val_line_width, val_gradient);
+			}
+			break;
+	}
+	worker_called = 0;
+	//d.length=0;
+	//alert('Worker -- said: ' + e.data);
+}, false);
+
+var worker_called = 0;
+
+// ---------- frame refresh ----------
+
+var favicon_refresh_count = 0;
 
 function animate_paint(canvas, context)
 {
 	var a, c, x, y, p;
-	var col;
+	var col, col_end, col_mid;
 	var xx, yy, xxx, yyy, ang, pp, dist;
 	var ang_s, ang_e, found;
 	var alfa;
@@ -766,84 +1026,23 @@ function animate_paint(canvas, context)
 		context.drawImage(img_painting, 0, 0, x_res, y_res);
 	}
 
-	if (painting_restart)
+	if (painting_restart && !worker_called)
 	{
 		painting_restart = 0;
-		rect(context, 0, 0, x_res, y_res, 1, val_start_canvas == 2 ? val_canvas_color : !val_start_canvas ? col_white : col_black, 1);
+		rect(context, 0, 0, x_res, y_res, 1, val_start_canvas == 2 ? val_canvas_color : !val_start_canvas ? col_white : col_black, col_black, 1, 1, 0);
 	}
 
-	context.lineCap="round";
+	got_data = 0;
 
-	if (val_play)
-
-	for (a = 0; a < val_steps; a++)
+	if (val_play && !worker_called)
 	{
-		x = rnd(x_res - 1);
-		y = rnd(y_res - 1);
-		p = y*x_res*4 + x*4;
-		col = new RGB(img_data[p], img_data[p+1], img_data[p+2]);
-
-		if (val_shader == SHADER_WALK)
-			c = val_walk_steps;
-		else
-			c = val_shader == SHADER_TRIANGLE ? 2 : 1;
-		do {
-			found = 0;
-			for (dist = val_pixel_start_dist; dist <= val_pixel_dist && !found; dist++)
-			{
-				ang_s = (DVAPI * val_angle_start)/360;
-				ang_s += (DVAPI * rnd(val_angle_start_rand))/360;
-				ang_e = ang_s + ((val_arc_length) * DVAPI)/360;
-				for (ang = ang_s; ang < ang_e; ang += 0.031415926)
-				{
-					xx = x + Math.sin(ang)*dist;
-					yy = y + Math.cos(ang)*dist;
-					xx = Math.floor(xx);
-					yy = Math.floor(yy);
-					if (xx < 0) break; if (yy < 0) break;
-					if (xx >= x_res) break; if (yy >= y_res) break;
-					pp = yy*x_res*4 + xx*4;
-					if ( Math.abs(img_data[p] - img_data[pp]) <= val_pixel_similiar &&
-						Math.abs(img_data[p+1] - img_data[pp+1]) <= val_pixel_similiar &&
-						Math.abs(img_data[p+2] - img_data[pp+2]) <= val_pixel_similiar )
-					{
-						found = 1;
-						break;
-					}
-				}
-			}
-			if (val_shader != SHADER_WALK)
-			{
-				if (c == 2)
-				{
-					xxx = xx;
-					yyy = yy;
-				}
-			}
-			else
-			{
-				if (found)
-				{
-					alfa = get_alfa(dist);
-					line(context, x, y, xx, yy, col, alfa, val_line_width, val_line_cap);
-					x = xx; y = yy;
-				}
-			}
-			c--;
-		} while (c && found);
-		if (val_shader != SHADER_WALK && found)
-		{	
-			alfa = get_alfa(dist);
-			switch (val_shader)
-			{
-				case SHADER_LINE: line(context, x, y, xx, yy, col, alfa, val_line_width, val_line_cap); break;
-				case SHADER_TRIANGLE: triangle(context, x, y, xx, yy, xxx, yyy, val_shader_filled, col, alfa, val_line_width); break;
-				case SHADER_CIRCLE: circle(context, (x+xx)/2, (y+yy)/2, Math.sqrt((xx-x+1)*(xx-x+1) + (yy-y+1)*(yy-y+1)), val_shader_filled, col, alfa, val_line_width); break;
-				case SHADER_BOX: rect(context, x, y, xx-x+1, yy-y+1, val_shader_filled, col, alfa, val_line_width); break;
-			}
-		}
+		worker.postMessage({cmd:'do',val_steps:val_steps,val_walk_steps:val_walk_steps,val_shader:val_shader,val_alfa:val_alfa,
+														val_pixel_start_dist:val_pixel_start_dist,val_pixel_dist:val_pixel_dist,
+														val_angle_start:val_angle_start, val_angle_start_rand:val_angle_start_rand, val_arc_length:val_arc_length,
+														val_pixel_similiar:val_pixel_similiar,val_inverted_fade:val_inverted_fade,val_dist_fade:val_dist_fade});
+		worker_called = 1;
 	}
-	
+
 	if (painting_snap)
 	{
 		painting_snap = 0;
@@ -855,23 +1054,42 @@ function animate_paint(canvas, context)
 		context.drawImage(img_original, 0, 0, x_res, y_res);
 	}
 
-	favicon_context.globalAlpha = 1;
-	favicon_context.drawImage(canvas, 0, 0, 16, 16);
-	favicon_link.href = favicon_canvas.toDataURL("image/x-icon");
-	document.getElementsByTagName('head')[0].appendChild(favicon_link);
+	if (!favicon_refresh_count)
+	{
+		favicon_context.globalAlpha = 1;
+		favicon_context.drawImage(canvas, 0, 0, 16, 16);
+		favicon_link.href = favicon_canvas.toDataURL("image/x-icon");
+		document.getElementsByTagName('head')[0].appendChild(favicon_link);
+	}
+	favicon_refresh_count++;
+	favicon_refresh_count %= 32;
+
 
 	requestAnimFrame(function() { animate_paint(canvas, context); });
 }
 
 // ^^^ end of algo
 
+// ---------- canvas init/resize, grab image data, start filtering ----------
+
 var canvas = 0, context = 0;
-function paint(face_img)
+function paint(face_img, video)
 {
 	if (!canvas) canvas = document.getElementById('face');
 	if (!context) context = canvas.getContext('2d');
 
-	var wid = face_img.width, hei = face_img.height;
+	var wid, hei;
+	
+	if (!video)
+	{
+		wid = face_img.width;
+		hei = face_img.height;
+	}
+	else
+	{
+		wid = face_img.videoWidth;
+		hei = face_img.videoHeight;
+	}
 
 	if (wid > hei)
 	{
@@ -889,6 +1107,14 @@ function paint(face_img)
 	divupload = document.getElementById('divupload');
 	divupload.style.left = (860+(x_res-640))+"px";
 	divupload.style.top = (690+(y_res-640))+"px";
+
+	divcapture = document.getElementById('divcapture');
+	divcapture.style.top = (690+(y_res-640))+"px";
+
+	divupload = document.getElementById('divcapture_con');
+	divupload.style.left = (705+((x_res-640)>>1))+"px";
+	
+	
 	holder.className = 'paint';
 	holder.style.width = x_res+"px";
 	holder.style.height = y_res+"px";
@@ -896,19 +1122,37 @@ function paint(face_img)
 	canvas.height = y_res;
 	canvas.style.width = x_res+"px";
 	canvas.style.height = y_res+"px";
+
+	video = document.getElementById('video_capture');
+	video.style.width = x_res+"px";
+	video.style.height = y_res+"px";
+	video.width = x_res;
+	video.height = y_res;
+
 // io6 squash issue fix -> http://stackoverflow.com/questions/11929099/html5-canvas-drawimage-ratio-bug-ios
 	context.drawImage(face_img, 0, 0, x_res, y_res);
 
 	var imageData = context.getImageData(0, 0, x_res, y_res);
 	img_data = imageData.data;
+	worker.postMessage({cmd:'img',img_data:img_data,x_res:x_res,y_res:y_res});
 
-	rect(context, 0, 0, x_res, y_res, 1, val_start_canvas == 2 ? val_canvas_color : !val_start_canvas ? col_white : col_black, 1);
+	if (!video)
+		img_original = face_img;
+	else
+	{
+		img_original = new Image();
+		img_original.src = canvas.toDataURL("image/raw");
+		video_div.style.visibility = "hidden";
+	}
+
+	rect(context, 0, 0, x_res, y_res, 1, val_start_canvas == 2 ? val_canvas_color : !val_start_canvas ? col_white : col_black, col_black, 1, 1, 0);
 
 	painting_start();
-	img_original = face_img;
-	
+
 	animate_paint(canvas, context);
 }
+
+// ---------- drop/upload of image ----------
 
 function read_image(file)
 {
@@ -916,7 +1160,7 @@ function read_image(file)
 	reader.onload = function (event) {
 		var img = new Image();
 		img.src = event.target.result;
-		img.onload = function () { paint(img); };
+		img.onload = function () { paint(img, 0); };
 	}
 	reader.readAsDataURL(file);
 }
@@ -939,6 +1183,9 @@ function file_select(evt)
 	read_image(evt.target.files[0]);
 }
 document.getElementById('upload').addEventListener('change', file_select, false);
+document.getElementById('capture').addEventListener('change', file_select, false);
+
+// ---------- fav icon init ----------
 
 var favicon_canvas = document.createElement('canvas');
 favicon_canvas.width = 16;
@@ -946,11 +1193,11 @@ favicon_canvas.height = 16;
 var favicon_context = favicon_canvas.getContext('2d');
 var fav_col1 = new RGB(0x80, 0x40, 00);
 var fav_col2 = new RGB(0xF0, 0x90, 00);
-line(favicon_context, 0, 15, 4, 1, fav_col1, 1, 1, 0);
-line(favicon_context, 3, 15, 4+3, 1, fav_col1, 1, 1, 0);
-line(favicon_context, 6, 15, 4+6, 1, fav_col2, 1, 1, 0);
-line(favicon_context, 9, 15, 4+9, 1, fav_col2, 1, 1, 0);
-line(favicon_context, 12, 15, 4+12, 1, fav_col2, 1, 1, 0);
+line(favicon_context, 0, 15, 4, 1, fav_col1, fav_col1, 1, 1, 1, 0, 0);
+line(favicon_context, 3, 15, 4+3, 1, fav_col1, fav_col1, 1, 1, 1, 0, 0);
+line(favicon_context, 6, 15, 4+6, 1, fav_col2, fav_col2, 1, 1, 1, 0, 0);
+line(favicon_context, 9, 15, 4+9, 1, fav_col2, fav_col2, 1, 1, 1, 0, 0);
+line(favicon_context, 12, 15, 4+12, 1, fav_col2, fav_col2, 1, 1, 1, 0, 0);
 var favicon_link = document.createElement('link');
 favicon_link.type = 'image/x-icon';
 favicon_link.rel = 'shortcut icon';
@@ -959,16 +1206,104 @@ document.getElementsByTagName('head')[0].appendChild(favicon_link);
 
 // Wilder's quote: I like art because I consider it to be the highest form of unregulated freedom.
 
-</script>
+// ---------- camera capture ----------
 
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+var video = document.getElementById("video_capture");
+var video_div = document.getElementById("video_div");
+var controls_div = document.getElementById('divcapture_con');
+var video_stream;
 
-  ga('create', 'UA-40773143-2', 'haluska.sk');
-  ga('send', 'pageview');
+function is_camera()
+{
+	return !!(navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
+}
+
+if (is_camera()) // show capture button
+{
+	divcapture = document.getElementById('divcapture');
+	divcapture.style.visibility = "visible";
+}
+
+function camera_start()
+{
+	if (canvas)
+	{
+		val_play = 0;
+		button_refresh('play');
+		value_enable('play', 0);
+	}
+
+	video_div.style.visibility = "visible";
+	controls_div.style.visibility = "visible";
+
+	video = document.getElementById("video_capture");
+	videoObj = { "video": true },
+		errBack = function(error) {
+		console.log("Video capture error: ", error.code); 
+	};
+
+	if(navigator.getUserMedia)
+	{
+		navigator.getUserMedia(videoObj, function(stream) {
+			video_stream = stream;
+			video.src = stream;
+			video.play();
+		}, errBack);
+	}
+	else
+	if(navigator.webkitGetUserMedia)
+	{
+		navigator.webkitGetUserMedia(videoObj, function(stream){
+			video_stream = stream;
+			video.src = window.webkitURL.createObjectURL(stream);
+			video.play();
+		}, errBack);
+	}
+	else
+	if(navigator.mozGetUserMedia)
+	{
+		navigator.mozGetUserMedia(videoObj, function(stream){
+			video_stream = stream;
+			video.src = window.URL.createObjectURL(stream);
+			video.play();
+		}, errBack);
+	}
+	else
+		alert("Camera Capture Not Supported!");
+}
+
+var video_feed = 0;
+
+document.addEventListener('DOMContentLoaded', function()
+{
+	video_feed = document.getElementById('video_capture');
+});
+
+document.getElementById('snap').addEventListener('click', capture_snap);
+document.getElementById('stop').addEventListener('click', capture_stop);
+
+function capture_stop(e)
+{
+	if (video_stream != undefined)
+	{
+		video_feed.pause();
+		video_stream.stop();
+		video_stream.onended = null;
+		video_stream = null;	
+		video_feed.src = 0;
+		video_feed.mozSrcObject = null;
+	}
+	video_div.style.visibility = "hidden";
+	controls_div.style.visibility = "hidden";
+	if (canvas) value_enable('play', 1);
+}
+
+function capture_snap(e)
+{
+	if (video_feed.videoWidth == 0) return capture_stop(e);
+	paint(video_feed, 1);
+	capture_stop(e);
+};
 
 </script>
 
