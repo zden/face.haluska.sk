@@ -20,6 +20,9 @@
 <table>
 <tr><td class=title width=100% style="white-space: nowrap;">GEOMETRIC <fx style="color:#804000">//</fx> PHOTO FILTER <fx style="color:#F08000">/  /    /</fx></td><td align=right style="white-space: nowrap;">© 2014 <a target="_blank" href="http://Zd3N.com">Zden</a> | <a target="_blank" href="http://satori.sk">Satori SK</a> | <a target="_blank" href="http://github.org/zden/face.haluska.sk">source</a><br>ver. 1.10 | July/29/2014 | <a href="changelog.md" target="_blank">changelog</a></td></tr>
 </table>
+<script src="filesave/Blob.js"></script>
+<script src="filesave/FileSaver.js"></script>
+<script src="filesave/canvas-toBlob.js"></script>
 </header>
 <style>
 
@@ -87,12 +90,11 @@ a:hover {
 }
 
 </style>
-<article>
   <div id="UI" style="position: absolute; top: 40px; left: 0px;">
   <p>
 	<table background="bgui.gif" width=220>
 	<tr><td>
-	<table width=420><tr><td width=210><input style="width: 130px;" id='save' type='button' value="&#9658; SAVE PAINTING" onclick=button_change(this) /></td>
+	<table width=420><tr><td width=210><input style="width: 130px;" id='save' type='button' value="&#9658; SAVE PAINTING" onclick=button_change(this) /></td><td>Name:</td><td><input id="filename" type="string" value="myface" size="8" onchange=value_change(this) /></td>
 	<td width=210 align=right><input style="width: 80px;" id='play' type='button' value="&#9658; PAUSE" onclick=button_change(this) />&nbsp;&nbsp;&nbsp;</td></tr>
 	</table>
 		<table>
@@ -110,7 +112,7 @@ a:hover {
 			<option>- - - - - - - - - - -</option>
 			<option>Save Preset</option>
 			<option>Load Preset</option>
-		</select></td><td></td>
+		</select></td><td width=60></td>
 		</tr>
 		<tr><td colspan=4></td></tr>
 		<tr><td bgcolor="#EED000" colspan=4></td></tr>
@@ -172,14 +174,43 @@ a:hover {
 	<tr><td colspan=4></td></tr>
 	<tr><td bgcolor="#D0D0D0" colspan=4></td></tr>
 	<tr><td colspan=4></td></tr>
+	</table>
+	<div id='gif_expand' style="display:block;">&nbsp;&nbsp;&nbsp;<a href="#" onclick="return txt_open('gif_expand', 'gif_options');">show gif options</a></div>
+	<div id='gif_options' style="display:none;">
+	<table>
+		<tr><td><input style="width: 100px;" id='gif_frame' type='button' value="SNAP FRAME" onclick=button_change(this) /></td>
+		<td><p id="gif_status"></p></td><td><input style="width: 60px;" id='gif_save' type='button' value="SAVE" onclick=button_change(this) /></td></tr>
+		<tr><td width=150>Frames:</td><td><input type="text" id="gif_frames" readonly style="width: 30px;" /></td></tr>
+		<tr><td>Automatic Snap:</td><td><input id="gif_auto" type="checkbox" value="0" onchange=value_change(this) /></td></tr>
+		<tr><td>Snap Period:</td><td><input style="width:64px;" id="gif_auto_period" type="number" onchange=value_change(this) value="10" /></td></tr>
+		<tr><td>Gif Frame Duration:</td><td><input style="width:64px;" id="gif_time" type="number" onchange=value_change(this) value="100" /></td></tr>
+		<tr><td>Loop:</td><td><input id="gif_loop" type="checkbox" value="0" onchange=value_change(this) /></td></tr>
+<!--	<tr><td>Transparent:</td><td><input id="gif_trans" type="checkbox" value="0" onchange=value_change(this) /></td></tr> -->
+		<tr><td width=150>Resolution:</td><td width=160>
+			<select style="width:105px;" id='gif_res' onChange=combo_change(this)>
+				<option>Scaled</option>
+				<option>Fixed Width</option>
+				<option>Fixed Height</option>
+				<option>Fixed Res</option>
+			</select>
+			</td><td><input style="width: 60px;" id='gif_set' type='button' value="RESET" onclick=button_change(this) /></td></tr>
+		<tr><td>Scale:</td><td><input style="width:64px;" id="gif_scale" type="number" onchange=value_change(this) value="25" /></td></tr>
+		<tr><td>Width:</td><td><input style="width:64px;" id="gif_wid" type="number" onchange=value_change(this) value="32" /></td></tr>
+		<tr><td>Height:</td><td><input style="width:64px;" id="gif_hei" type="number" onchange=value_change(this) value="32" /></td></tr>
+	</table>
+	</div>
+	<table width=420>
+	<tr><td colspan=4></td></tr>
+	<tr><td bgcolor="#D0D0D0" colspan=4></td></tr>
+	<tr><td colspan=4></td></tr>
 	<tr><td><input style="width: 140px;" id='orig' type='button' value="SHOW ORIGINAL" onclick=button_change(this) /></td><td><input style="width: 85px;" id='restart' type='button' value="&#8857; RESTART" onclick=button_change(this) /></td><td></td></tr>
-	<tr><td width=150>Start with:</td><td>
+	<tr><td>Start with:</td><td>
 	<select id='start' onChange=combo_change(this)>
 		<option>White Canvas</option>
 		<option>Black Canvas</option>
 		<option style="background-color:orange" id="canvas_color_option">Custom Color</option>
 	</td><td></td></tr>
-	<tr><td>Custom Color:</td><td><input id="canvas_color" type="string" value="orange" size="9" onchange=value_change(this) /></td><td style="background-color:orange;" id="canvas_color_td"></td></tr>
+	<tr><td width=150>Custom Color:</td><td width=190><input id="canvas_color" type="string" value="orange" size="9" onchange=value_change(this) /></td><td style="background-color:orange;" id="canvas_color_td" width=70></td><td width=10></td></tr>
 	<tr><td colspan=4><fx style="color:#808080; font-size: 8pt;">Color by English name or RGB value in hexadecimal.</fx>
 	<tr><td colspan=4></td></tr>
 	<tr><td bgcolor="#D0D0D0" colspan=4></td></tr>
@@ -212,7 +243,6 @@ a:hover {
   <div id="video_div"><video autoplay="" id="video_capture">
   
   </video></div>
-</article>
 
 <script>
 
@@ -238,6 +268,22 @@ var val_play = 1, val_orig = 0;
 var painting_snap = 0;
 var painting_refresh = 0;
 var painting_restart = 0;
+
+var gif_frames = 0;
+var gif_x_res, gif_y_res;
+var val_gif_auto = 0;
+var val_gif_auto_period = 50;
+var val_gif_time = 25;
+var val_gif_loop = 1;
+var val_gif_trans = 1;
+var val_gif_res = 0;
+var val_gif_scale = 25;
+var val_gif_wid = 32;
+var val_gif_hei = 32;
+
+var filename = "myface";
+
+var GIF_SCALE = 0, GIF_WID = 1, GIF_HEI = 2, GIF_RES = 3;
 
 var x_res = 640, y_res = 640;
 
@@ -289,6 +335,9 @@ function painting_start()
 	value_enable('orig', 1);
 	value_enable('save', 1);
 	value_enable('restart', 1);
+	value_enable('gif_frame', 1);
+	value_enable('gif_set', 1);
+	gif_auto_cnt = 0;
 }
 
 var SHADER_LINE = 0;
@@ -314,6 +363,9 @@ button_refresh('play');
 button_refresh('orig');
 combo_set('preset',0);
 combo_set('start',0);
+value_enable('gif_frame', 0);
+value_enable('gif_save', 0);
+value_enable('gif_set', 0);
 
 function value_get(id)
 {
@@ -391,6 +443,17 @@ function update_controls()
 	value_set('walk_steps_num', val_walk_steps);
 	change_shader(val_shader);
 	check_set('shader_filled', val_shader_filled);
+	
+	value_set('gif_frames', gif_frames);
+	check_set('gif_loop', val_gif_loop);
+//	check_set('gif_trans', val_gif_trans);
+	value_set('gif_time', val_gif_time);
+	value_set('gif_scale', val_gif_scale);
+	value_set('gif_wid', val_gif_wid);
+	value_set('gif_hei', val_gif_hei);
+	check_set('gif_auto', val_gif_auto);
+	combo_set('gif_res', val_gif_res);
+	value_set('gif_auto_period', val_gif_auto_period);
 
 	refresh_enabled();
 }
@@ -450,8 +513,21 @@ function snap_painting(canvas)
 
 function save_painting(canvas)
 {
-	var img = canvas.toDataURL("image/png");
-	window.open(img);
+//	var img = canvas.toDataURL("image/png");
+//	window.open(img);
+	canvas.toBlob(function(blob) { saveAs(blob, filename + ".png"); }, "image/png");
+}
+
+function gif_add_frame()
+{
+	if (!gif_frames) gif_start();
+	var ctx = canvas_gif.getContext('2d');
+	ctx.drawImage(canvas, 0, 0, x_res, y_res, 0, 0, val_gif_wid, val_gif_hei);
+	gif_data = ctx.getImageData(0,0, val_gif_wid, val_gif_hei).data;
+	gif_worker.postMessage({cmd:'frame',frame:gif_data});
+	gif_frames++;
+	value_set('gif_frames', gif_frames);
+	refresh_enabled();
 }
 
 function button_change(obj)
@@ -494,6 +570,15 @@ function button_change(obj)
 		case 'restart':
 						painting_restart = 1;
 						break;
+		case 'gif_frame':
+						gif_add_frame();
+						break;
+		case 'gif_save':
+						gif_save();
+						break;
+		case 'gif_set':
+						gif_set();
+						break;
 	}
 }
 
@@ -518,6 +603,10 @@ function combo_change(obj)
 
 			combo_set('preset', 0);
 			break;
+		case 'gif_res':
+			val_gif_res = obj.selectedIndex;
+			refresh_enabled();
+			break;
 	}
 }
 
@@ -531,6 +620,10 @@ function refresh_enabled()
 	value_enable('line_width_num', !val_shader_filled || (val_shader == SHADER_LINE || val_shader == SHADER_WALK));
 	value_enable('alfa_end', val_gradient);
 	value_enable('alfa_end_num', val_gradient);
+	value_enable("gif_scale", val_gif_res == GIF_SCALE);
+	value_enable("gif_wid", val_gif_res == GIF_WID || val_gif_res == GIF_RES);
+	value_enable("gif_hei", val_gif_res == GIF_HEI || val_gif_res == GIF_RES);
+	value_enable("gif_loop", !gif_frames);
 }
 
 function value_change(obj)
@@ -672,10 +765,51 @@ function value_change(obj)
 									val_walk_steps = val;
 									break;
 
+		case 'filename':
+									filename = obj.value;
 		case 'canvas_color':
 									(document.getElementById('canvas_color_td')).style.backgroundColor = obj.value;
 									val_canvas_color.str = (document.getElementById('canvas_color_td')).style.backgroundColor;
 									(document.getElementById('canvas_color_option')).style.backgroundColor = val_canvas_color.str;
+									break;
+
+		case 'gif_time':
+									val = value_range(val, 1, 7777);
+									value_set('gif_time', val);
+									val_gif_time = val;
+									gif_params();
+									break;
+		case 'gif_scale':
+									val = value_range(val, 1, 200);
+									value_set('gif_scale', val);
+									val_gif_scale = val;
+									break;
+		case 'gif_wid':
+									val = value_range(val, 1, x_res<<1);
+									value_set('gif_wid', val);
+									val_gif_wid = val;
+									break;
+		case 'gif_hei':
+									val = value_range(val, 1, y_res<<1);
+									value_set('gif_hei', val);
+									val_gif_hei = val;
+									break;
+
+		case 'gif_loop':
+									val_gif_loop = Math.floor( obj.checked );
+									gif_params();
+									break;
+		case 'gif_trans':
+									val_gif_trans = Math.floor( obj.checked );
+									break;
+		case 'gif_auto':
+									val_gif_auto = Math.floor( obj.checked );
+									refresh_enabled();
+									break;
+		case 'gif_auto_period':
+									val = value_range(val, 1, 256);
+									value_set('gif_auto_period', val);
+									val_gif_auto_period = val;
 									break;
 	}
 
@@ -698,7 +832,6 @@ function line(con_, xs, ys, xe, ye, col, col_end, alfa, alfa_end, stroke, cap, g
 		gradient = con_.createLinearGradient(xs, ys, xe, ye);
 		gradient.addColorStop(0, col.str);
 		ae = (alfa*alfa_end)/100;
-		//console.log(ae+ " " + alfa + " " + alfa_end);
 		gradient.addColorStop(1, 'rgba('+col_end.r+', '+col_end.g+', '+col_end.b+', '+ae+')');
 		con_.strokeStyle = gradient;
 	}
@@ -938,7 +1071,7 @@ window.requestAnimFrame = (function(callback) {
 
 // ---------- image, image_data, basic cols ----------
 
-//var img;
+var gif_encoder;
 var img_data;
 var col_white = new RGB ( 255, 255, 255 );
 var col_black = new RGB ( 0, 0, 0 );
@@ -954,6 +1087,42 @@ function get_alfa(dist)
 
 	return (alfa);
 }
+
+// ---------- gif worker ----------
+
+var gif_worker = new Worker('gifworker.js');
+var gif_frames_proc = 0;
+
+gif_worker.addEventListener('message', function(e) {
+	switch(e.data.cmd)
+	{
+		case 'start':
+					gif_frames_proc = 0;
+					break;
+		case 'frame':
+					gif_frames_proc++;
+
+					if (gif_frames == gif_frames_proc)
+					{
+						gif_set_status("");
+						value_enable('gif_save', 1);
+					}
+					else
+					{
+						gif_set_status("encoded frame "+gif_frames_proc);
+						value_enable('gif_save', 0);
+					}
+					break;
+		case 'gif':
+					gif_set_status("saving gif");
+					saveAs(base64toBlob(e.data.gif, "image/gif"), filename+".gif");
+					gif_set();
+					value_enable('gif_save', 1);
+					value_enable('gif_frame', 1);
+					refresh_enabled();
+					break;
+	}
+}, false);
 
 // ---------- filter worker ----------
 
@@ -1000,8 +1169,6 @@ worker.addEventListener('message', function(e) {
 			break;
 	}
 	worker_called = 0;
-	//d.length=0;
-	//alert('Worker -- said: ' + e.data);
 }, false);
 
 var worker_called = 0;
@@ -1009,6 +1176,8 @@ var worker_called = 0;
 // ---------- frame refresh ----------
 
 var favicon_refresh_count = 0;
+
+var gif_auto_cnt = 0;
 
 function animate_paint(canvas, context)
 {
@@ -1064,18 +1233,25 @@ function animate_paint(canvas, context)
 	favicon_refresh_count++;
 	favicon_refresh_count %= 32;
 
+	if (val_gif_auto && !gif_auto_cnt && val_play)
+	{
+		gif_add_frame();
+	}
+	gif_auto_cnt++;
+	gif_auto_cnt %= val_gif_auto_period;
 
 	requestAnimFrame(function() { animate_paint(canvas, context); });
 }
 
-// ^^^ end of algo
+// ^^^ update loop
 
 // ---------- canvas init/resize, grab image data, start filtering ----------
 
 var canvas = 0, context = 0;
+var canvas_gif = 0;
 function paint(face_img, video)
 {
-	if (!canvas) canvas = document.getElementById('face');
+	if (!canvas) { canvas = document.getElementById('face'); canvas_gif = document.getElementById('gif'); }
 	if (!context) context = canvas.getContext('2d');
 
 	var wid, hei;
@@ -1131,6 +1307,8 @@ function paint(face_img, video)
 
 // io6 squash issue fix -> http://stackoverflow.com/questions/11929099/html5-canvas-drawimage-ratio-bug-ios
 	context.drawImage(face_img, 0, 0, x_res, y_res);
+
+	gif_set();
 
 	var imageData = context.getImageData(0, 0, x_res, y_res);
 	img_data = imageData.data;
@@ -1305,7 +1483,122 @@ function capture_snap(e)
 	capture_stop(e);
 };
 
+function txt_open(id, cont)
+{
+	var ldiv =  document.getElementById(id);
+	ldiv.style.display = "none";
+	ldiv =  document.getElementById(cont);
+	ldiv.style.display = "block";
+	return false;
+}
+
+function txt_close(id, cont)
+{
+	var ldiv =  document.getElementById(id);
+	ldiv.style.display = "block";
+	ldiv =  document.getElementById(cont);
+	ldiv.style.display = "none";
+	return false;
+}
+
+// as found on http://stackoverflow.com/questions/16245767/creating-a-blob-from-a-base64-string-in-javascript
+function base64toBlob(base64Data, contentType) {
+    contentType = contentType || '';
+    var sliceSize = 1024*1024;
+    var byteCharacters = atob(base64Data);
+    var bytesLength = byteCharacters.length;
+    var slicesCount = Math.ceil(bytesLength / sliceSize);
+    var byteArrays = new Array(slicesCount);
+
+    for (var sliceIndex = 0; sliceIndex < slicesCount; ++sliceIndex) {
+        var begin = sliceIndex * sliceSize;
+        var end = Math.min(begin + sliceSize, bytesLength);
+
+        var bytes = new Array(end - begin);
+        for (var offset = begin, i = 0 ; offset < end; ++i, ++offset) {
+            bytes[i] = byteCharacters[offset].charCodeAt(0);
+        }
+        byteArrays[sliceIndex] = new Uint8Array(bytes);
+    }
+    return new Blob(byteArrays, { type: contentType });
+}
+// ^
+
+function gif_save()
+{
+	gif_set_status("exporting gif");
+	gif_worker.postMessage({cmd:'save'});
+	gif_frames = 0;
+	value_set('gif_frames', gif_frames);
+	value_enable('gif_save', 0);
+	value_enable('gif_frame', 0);
+	check_set('gif_auto', 0);
+	val_gif_auto = 0;
+}
+
+function gif_set()
+{
+	switch (val_gif_res)
+	{
+		case GIF_SCALE:
+			gif_x_res = Math.floor((x_res * val_gif_scale)/100);
+			gif_y_res = Math.floor((y_res * val_gif_scale)/100);
+			val_gif_wid = gif_x_res;
+			val_gif_hei = gif_y_res;
+			break;
+		case GIF_WID:
+			val_gif_hei = Math.floor((x_res * val_gif_wid) / y_res);
+			break;
+		case GIF_HEI:
+			val_gif_wid = Math.floor((y_res * val_gif_hei) / x_res);
+			break;
+		case GIF_RES:
+			break;
+	}
+	value_set("gif_wid", val_gif_wid);
+	value_set("gif_hei", val_gif_hei);
+	canvas_gif.width = val_gif_wid;
+	canvas_gif.height = val_gif_hei;
+	canvas_gif.style.width = val_gif_wid+"px";
+	canvas_gif.style.height = val_gif_hei+"px";
+
+	gif_frames = 0;
+	value_set('gif_frames', gif_frames);
+	gif_set_status("");
+}
+
+function gif_set_status(str)
+{
+	if (str == "") str = "gif resolution: "+val_gif_wid+"*"+val_gif_hei;
+	status = document.getElementById('gif_status').innerHTML = str;
+}
+
+function gif_params()
+{
+	gif_worker.postMessage({cmd:'params',time:val_gif_time});
+}
+
+function gif_start()
+{
+	gif_worker.postMessage({cmd:'start',loop:val_gif_loop,time:val_gif_time,wid:val_gif_wid,hei:val_gif_hei/*,trans:val_gif_trans,trans_color:tc*/});
+	gif_frames = 0;
+	value_set('gif_frames', gif_frames);
+}
+
 </script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-40773143-2', 'haluska.sk');
+  ga('send', 'pageview');
+
+</script>
+
+<div id="gif_scaled"><canvas id='gif' width=128 height=128 style='position:relative;visibility:hidden'></canvas></div>
 
 </body>
 </html>
