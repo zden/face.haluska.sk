@@ -1,6 +1,7 @@
 face.haluska.sk | FACE FILTER | source release
 
-Geometric Photo Filter
+Geometric Photo Filter - Now Powered by GIF
+
 This filter performs best on high detailed portrait pictures.
 ______________________________________________________________________________________________________
 
@@ -15,3 +16,14 @@ ________________________________________________________________________________
 
 (c) Zden Hlinka | Satori, s.r.o.
 developed in Jun-July 2014
+______________________________________________________________________________________________________
+
+V.1.15 introduces GIF creator and starts to include sources from other authors:
+
+/gif      - Thanks to Kevin Kwok for simple jsgif library.
+            Gif encoder sources: https://github.com/antimatter15/jsgif
+/filesave - Eli Grey wrote support for canvas to blob and blob file saving. Large paintings
+            and gifs are saved much more safely.
+            File save, canvas to blob sources: https://github.com/eligrey
+
+(large gifs can still crash your tab on certain browsers - read changelog for details)
