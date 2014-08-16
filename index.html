@@ -232,12 +232,12 @@ a:hover {
   </div>
   <div style="position: absolute;top:340px;left:690px;"><p class=drop>[&nbsp;drop&nbsp;image&nbsp;]</p></div>
   <div style="position: absolute;top:690;left:435;z-index:99;visibility:hidden" id="divcapture"><p class=drop>
-	<label for="capture" class="captureButton">[ camera capture ]</label>
+	<label for="capture" class="captureButton">[&nbsp;camera&nbsp;capture&nbsp;]</label>
 	<input style="opacity:0" accept="image/*" name="capture" id="capture" capture="camera" onclick="camera_start();"><br>
 	</div>
 	<div style="position: absolute;top:724;left:705;z-index:99;visibility:hidden" id="divcapture_con"><input type="button" value="&#9679;&nbsp;SNAP" id="snap">&nbsp;&nbsp;<input type="button" value="&#9632;&nbsp;STOP" id="stop"></div>
   <div style="position: absolute;top:690;left:862;z-index:99;" id="divupload"><p class=drop>
-	<label for="upload" class="uploadButton">[ upload image ]</label>
+	<label for="upload" class="uploadButton">[&nbsp;upload&nbsp;image&nbsp;]</label>
 	<input style="opacity:0" type="file" name="upload" id="upload">
 	</div>
   <div id="holder"><canvas id='face' width=640 height=640 style='position:relative;'></canvas></div>
@@ -1107,11 +1107,13 @@ gif_worker.addEventListener('message', function(e) {
 					{
 						gif_set_status("");
 						value_enable('gif_save', 1);
+						value_enable('gif_set', 1);
 					}
 					else
 					{
 						gif_set_status("encoded frame "+gif_frames_proc);
 						value_enable('gif_save', 0);
+						value_enable('gif_set', 0);
 					}
 					break;
 		case 'gif':
@@ -1564,8 +1566,11 @@ function gif_set()
 	canvas_gif.style.height = val_gif_hei+"px";
 
 	gif_frames = 0;
-	value_set('gif_frames', gif_frames);
+	value_set("gif_frames", gif_frames);
+	check_set("gif_auto", 0);
+	val_gif_auto = 0;
 	gif_set_status("");
+	refresh_enabled();
 }
 
 function gif_set_status(str)
