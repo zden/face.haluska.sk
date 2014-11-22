@@ -1,9 +1,10 @@
-August/14/2014  - V.1.15 - gif creator - gif encoder by Kevin Kwok, safer painting saving via blobs by Eli Grey
-July/27/2014    - V.1.10 - filter in webworker, gradient with alfa end parameter, capture camera support, hue & saturation as bonus
-July/22/2014    - V.1.05 - Presets - 7 examples and simple load/save, custom Canvas Color, Alfa fix
-July/19/2014    - V.1.02 - Line Width and Line Cap options
-July/18/2014    - V.1.01 - touch devices [ upload image ] support
-July/17/2014    - V.1.00 - initial release
+November/15/2014 - V.1.16 - svg export - recording of vector data and saving in svg format (lacking gradient support for now)
+  August/14/2014 - V.1.15 - gif creator - gif encoder by Kevin Kwok, safer painting saving via blobs by Eli Grey
+    July/27/2014 - V.1.10 - filter in webworker, gradient with alfa end parameter, capture camera support, hue & saturation as bonus
+    July/22/2014 - V.1.05 - Presets - 7 examples and simple load/save, custom Canvas Color, Alfa fix
+    July/19/2014 - V.1.02 - Line Width and Line Cap options
+    July/18/2014 - V.1.01 - touch devices [ upload image ] support
+    July/17/2014 - V.1.00 - initial release
 
 known-bugs:  - squashed images of _large_ bitmaps on iOS devices (Safari bug)
              - unfilled circles with gradient does not react to alfa (Firefox bug)
