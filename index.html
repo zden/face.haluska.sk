@@ -18,11 +18,14 @@
 <body background="bg.gif">
 <header style="min-width:100%;">
 <table>
-<tr><td class=title width=100% style="white-space: nowrap;">GEOMETRIC <fx style="color:#804000">//</fx> PHOTO FILTER <fx style="color:#F08000">/  /    /</fx></td><td align=right style="white-space: nowrap;">© 2014 <a target="_blank" href="http://Zd3N.com">Zden</a> | <a target="_blank" href="http://satori.sk">Satori SK</a> | <a target="_blank" href="http://github.org/zden/face.haluska.sk">source</a><br>ver. 1.15 | August/14/2014 | <a href="changelog.md" target="_blank">changelog</a></td></tr>
+<tr><td class=title width=100% style="white-space: nowrap;">GEOMETRIC <fx style="color:#804000">//</fx> PHOTO FILTER <fx style="color:#F08000">/  /    /</fx> <fx style="color:#B0B0B0; font-size:15pt;">exporting PNG, GIF, SVG</fx></td><td align=right style="white-space: nowrap;">© 2014 <a target="_blank" href="http://Zd3N.com">Zden</a> | <a target="_blank" href="http://satori.sk">Satori SK</a> | <a target="_blank" href="http://github.org/zden/face.haluska.sk">source</a><br>ver. 1.16 | November/15/2014 | <a href="changelog.md" target="_blank">changelog</a></td></tr>
+<tr><td></td><td><img src="space.gif" width=16 height=1280></td></tr>
+<tr><td></td><td><a href="http://www.chromeexperiments.com/detail/geometric-photo-filter/" target="_blank"><img src="chrome_exp.png" align=right border=0></a></td></tr>
 </table>
 <script src="filesave/Blob.js"></script>
 <script src="filesave/FileSaver.js"></script>
 <script src="filesave/canvas-toBlob.js"></script>
+<script src="svgz.js"></script>
 </header>
 <style>
 
@@ -91,11 +94,14 @@ a:hover {
 
 </style>
   <div id="UI" style="position: absolute; top: 40px; left: 0px;">
-  <p>
+  <p><form>
 	<table background="bgui.gif" width=220>
 	<tr><td>
 	<table width=420><tr><td width=210><input style="width: 130px;" id='save' type='button' value="&#9658; SAVE PAINTING" onclick=button_change(this) /></td><td>Name:</td><td><input id="filename" type="string" value="myface" size="8" onchange=value_change(this) /></td>
 	<td width=210 align=right><input style="width: 80px;" id='play' type='button' value="&#9658; PAUSE" onclick=button_change(this) />&nbsp;&nbsp;&nbsp;</td></tr>
+	</table>
+	<table width=420><!--<tr><td width=150><input style="width: 130px;" id='save_svg' type='button' value="&#9658; SAVE VECTORS" onclick=button_change(this) /></td><td width=120>Record Vectors:</td><td width=150><input id="record_vectors" type="checkbox" value="0" onchange=value_change(this) /></td></tr>-->
+	<tr><td width=150><input style="width: 130px;" id='save_svg' type='button' value="&#9658; SAVE VECTORS" onclick=button_change(this) /></td><td width=120>Record Vectors:</td><td width=150><input id="record_vectors" type="checkbox" value="0" onchange=value_change(this) /></td></tr>
 	</table>
 		<table>
 		<tr><td width=150>Presets:</td><td>
@@ -216,7 +222,7 @@ a:hover {
 	<tr><td colspan=4></td></tr>
 	<tr><td bgcolor="#D0D0D0" colspan=4></td></tr>
 	<tr><td colspan=4></td></tr>
-	</table>
+	</table></form>
 	<tr><td>
 	<table><tr><td style="text-align: justify;">
 	<b>Usage:</b><br><desc style="color:#505070">Drag and drop some image and work with the values in real-time to make your generative version. You have basic geometric primitives to choose from and full real-time parametric control over the painting algorithm. Use Pause/Play to set parameters comfortably, have a look at original picture for comparison, and when you are satisfied with your creation, you can save it to a new browser tab. This filter performs best on high detailed portrait pictures. If you want to start on another picture just drop it onto the drawing area.</desc><p>
@@ -231,12 +237,12 @@ a:hover {
 </table>
   </div>
   <div style="position: absolute;top:340px;left:690px;"><p class=drop>[&nbsp;drop&nbsp;image&nbsp;]</p></div>
-  <div style="position: absolute;top:690;left:435;z-index:99;visibility:hidden" id="divcapture"><p class=drop>
+  <div style="position: absolute;top:690;left:435;width:200;z-index:99;visibility:hidden" id="divcapture"><p class=drop>
 	<label for="capture" class="captureButton">[&nbsp;camera&nbsp;capture&nbsp;]</label>
-	<input style="opacity:0" accept="image/*" name="capture" id="capture" capture="camera" onclick="camera_start();"><br>
+	<input style="opacity:0" accept="image/*" name="capture" id="capture" capture="camera" onclick="camera_start();">
 	</div>
 	<div style="position: absolute;top:724;left:705;z-index:99;visibility:hidden" id="divcapture_con"><input type="button" value="&#9679;&nbsp;SNAP" id="snap">&nbsp;&nbsp;<input type="button" value="&#9632;&nbsp;STOP" id="stop"></div>
-  <div style="position: absolute;top:690;left:862;z-index:99;" id="divupload"><p class=drop>
+  <div style="position: absolute;top:690;left:862;width:200;z-index:99;" id="divupload"><p class=drop>
 	<label for="upload" class="uploadButton">[&nbsp;upload&nbsp;image&nbsp;]</label>
 	<input style="opacity:0" type="file" name="upload" id="upload">
 	</div>
@@ -266,6 +272,7 @@ var val_inverted_fade = 0;
 var val_steps = 10;
 var val_walk_steps = 10;
 var val_play = 1, val_orig = 0;
+var val_vectors = 1;
 var painting_snap = 0;
 var painting_refresh = 0;
 var painting_restart = 0;
@@ -335,10 +342,12 @@ function painting_start()
 	value_enable('play', 1);
 	value_enable('orig', 1);
 	value_enable('save', 1);
+	value_enable('save_svg', val_vectors ? 1 : 0);
 	value_enable('restart', 1);
 	value_enable('gif_frame', 1);
 	value_enable('gif_set', 1);
 	gif_auto_cnt = 0;
+	svgz_start(x_res, y_res);
 }
 
 var SHADER_LINE = 0;
@@ -359,6 +368,7 @@ value_set('canvas_color', 'orange');
 value_enable('play', 0);
 value_enable('orig', 0);
 value_enable('save', 0);
+value_enable('save_svg', 0);
 value_enable('restart', 0);
 button_refresh('play');
 button_refresh('orig');
@@ -455,6 +465,8 @@ function update_controls()
 	check_set('gif_auto', val_gif_auto);
 	combo_set('gif_res', val_gif_res);
 	value_set('gif_auto_period', val_gif_auto_period);
+	
+	check_set('record_vectors', val_vectors);
 
 	refresh_enabled();
 }
@@ -519,6 +531,12 @@ function save_painting(canvas)
 	canvas.toBlob(function(blob) { saveAs(blob, filename + ".png"); }, "image/png");
 }
 
+function save_vectors()
+{
+	var blob = new Blob([ svgz_end() ], { type: "image/svg" } );
+	saveAs(blob, filename + ".svg");
+}
+
 function gif_add_frame()
 {
 	if (!gif_frames) gif_start();
@@ -537,6 +555,10 @@ function button_change(obj)
 	{
 		case 'save':
 						if (!val_orig) save_painting(canvas);
+						break;
+
+		case 'save_svg':
+						save_vectors(canvas);
 						break;
 		case 'play':
 						val_play ^= 1;
@@ -557,12 +579,14 @@ function button_change(obj)
 							painting_snap = 1;
 							value_enable('play', 0);
 							value_enable('save', 0);
+							value_enable('save_svg', 0);
 							value_enable('restart', 0);
 						}
 						else
 						{
 							value_enable('play', 1);
 							value_enable('save', 1);
+							value_enable('save_svg', val_vectors ? 1 : 0);
 							value_enable('restart', 1);
 							painting_refresh = 4;
 						}
@@ -570,6 +594,8 @@ function button_change(obj)
 
 		case 'restart':
 						painting_restart = 1;
+						svgz_start(x_res, y_res);
+						refresh_enabled();
 						break;
 		case 'gif_frame':
 						gif_add_frame();
@@ -625,6 +651,7 @@ function refresh_enabled()
 	value_enable("gif_wid", val_gif_res == GIF_WID || val_gif_res == GIF_RES);
 	value_enable("gif_hei", val_gif_res == GIF_HEI || val_gif_res == GIF_RES);
 	value_enable("gif_loop", !gif_frames);
+	value_enable("save_svg", ( (svgz_shapes ? 1 : 0) | val_vectors ) & (canvas != 0 ? 1 : 0));
 }
 
 function value_change(obj)
@@ -812,6 +839,10 @@ function value_change(obj)
 									value_set('gif_auto_period', val);
 									val_gif_auto_period = val;
 									break;
+		case 'record_vectors':
+									val_vectors = Math.floor ( obj.checked );
+									refresh_enabled();
+									break;
 	}
 
 }
@@ -821,8 +852,25 @@ var holder = document.getElementById('holder');
 if (typeof window.FileReader === 'undefined')
 	alert("File API & FileReader is not available.\nYou can't drag and drop images to process filter.");
 
+function line_s(con_, xs, ys, xe, ye, col, alfa, stroke)
+{
+	con_.globalAlpha = alfa;
+	con_.strokeStyle = col.str;
+	con_.lineWidth = stroke;
+	con_.lineCap= "butt";
+	con_.beginPath();
+	con_.moveTo(xs, ys);
+	con_.lineTo(xe, ye);
+	con_.stroke();
+}
+	
 function line(con_, xs, ys, xe, ye, col, col_end, alfa, alfa_end, stroke, cap, grad)
 {
+	var cap_str = !cap ? "butt" : cap == 1 ? "round" : "square";
+
+	if (val_vectors)
+		svgz_line(xs, ys, xe, ye, col.str, alfa, stroke, cap_str);
+
 	con_.lineWidth = stroke;
 	var ae;
 
@@ -837,7 +885,7 @@ function line(con_, xs, ys, xe, ye, col, col_end, alfa, alfa_end, stroke, cap, g
 		con_.strokeStyle = gradient;
 	}
 	con_.globalAlpha = alfa;
-	con_.lineCap= !cap ? "butt" : cap == 1 ? "round" : "square";
+	con_.lineCap= cap_str;
 	con_.beginPath();
 	con_.moveTo(xs, ys);
 	con_.lineTo(xe, ye);
@@ -846,6 +894,9 @@ function line(con_, xs, ys, xe, ye, col, col_end, alfa, alfa_end, stroke, cap, g
 
 function circle(con_, x, y, r, filled, col, col_end, alfa, alfa_end, stroke, grad)
 {
+	if (val_vectors)
+		svgz_circle(x, y, r, filled, col.str, alfa, stroke);
+
 	con_.lineWidth = stroke;
 	con_.globalAlpha = alfa;
 	con_.beginPath();
@@ -879,6 +930,9 @@ function circle(con_, x, y, r, filled, col, col_end, alfa, alfa_end, stroke, gra
 
 function triangle(con_, x1, y1, x2, y2, x3, y3, filled, col, col_mid, col_end, alfa, alfa_end, stroke, grad)
 {
+	if (val_vectors)
+		svgz_triangle(x1, y1, x2, y2, x3, y3, filled, col.str, alfa, stroke);
+
 	con_.lineWidth = stroke;
 	con_.beginPath();
 	con_.moveTo(x1, y1);
@@ -929,6 +983,9 @@ function triangle(con_, x1, y1, x2, y2, x3, y3, filled, col, col_mid, col_end, a
 
 function rect(con_, x1, y1, wid, hei, filled, col, col_end, alfa, alfa_end, stroke, grad)
 {
+	if (val_vectors)
+		svgz_rect(x1, y1, wid, hei, filled, col.str, alfa, stroke);
+
 	if (grad && !filled)
 	{
 		line(con_, x1, y1, x1+wid, y1, col, col_end, alfa, alfa_end, stroke, val_line_cap, 1);
@@ -1374,11 +1431,11 @@ favicon_canvas.height = 16;
 var favicon_context = favicon_canvas.getContext('2d');
 var fav_col1 = new RGB(0x80, 0x40, 00);
 var fav_col2 = new RGB(0xF0, 0x90, 00);
-line(favicon_context, 0, 15, 4, 1, fav_col1, fav_col1, 1, 1, 1, 0, 0);
-line(favicon_context, 3, 15, 4+3, 1, fav_col1, fav_col1, 1, 1, 1, 0, 0);
-line(favicon_context, 6, 15, 4+6, 1, fav_col2, fav_col2, 1, 1, 1, 0, 0);
-line(favicon_context, 9, 15, 4+9, 1, fav_col2, fav_col2, 1, 1, 1, 0, 0);
-line(favicon_context, 12, 15, 4+12, 1, fav_col2, fav_col2, 1, 1, 1, 0, 0);
+line_s(favicon_context, 0, 15, 4, 1, fav_col1, 1, 1);
+line_s(favicon_context, 3, 15, 4+3, 1, fav_col1, 1, 1);
+line_s(favicon_context, 6, 15, 4+6, 1, fav_col2, 1, 1);
+line_s(favicon_context, 9, 15, 4+9, 1, fav_col2, 1, 1);
+line_s(favicon_context, 12, 15, 4+12, 1, fav_col2, 1, 1);
 var favicon_link = document.createElement('link');
 favicon_link.type = 'image/x-icon';
 favicon_link.rel = 'shortcut icon';
