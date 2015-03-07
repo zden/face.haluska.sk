@@ -11,6 +11,7 @@
 	<meta property="og:image" content="http://face.haluska.sk/face3.png"/>
 	<meta property="og:image" content="http://face.haluska.sk/face4.png"/>
 	<meta property="og:image" content="http://face.haluska.sk/face5.png"/>
+	<meta property="og:image" content="http://face.haluska.sk/face6.png"/>
 	<meta property="og:description" content="Photo filter based on random lookup for neighbouring pixels with similar color and shading via drawing basic geometric primitives."/>
 	<meta property="og:url" content="http://face.haluska.sk" />
 	<link rel="image_src" href="http://face1.png" / >
@@ -18,9 +19,7 @@
 <body background="bg.gif">
 <header style="min-width:100%;">
 <table>
-<tr><td class=title width=100% style="white-space: nowrap;">GEOMETRIC <fx style="color:#804000">//</fx> PHOTO FILTER <fx style="color:#F08000">/  /    /</fx> <fx style="color:#B0B0B0; font-size:15pt;">exporting PNG, GIF, SVG</fx></td><td align=right style="white-space: nowrap;">© 2014 <a target="_blank" href="http://Zd3N.com">Zden</a> | <a target="_blank" href="http://satori.sk">Satori SK</a> | <a target="_blank" href="http://github.org/zden/face.haluska.sk">source</a><br>ver. 1.16 | November/15/2014 | <a href="changelog.md" target="_blank">changelog</a></td></tr>
-<tr><td></td><td><img src="space.gif" width=16 height=1280></td></tr>
-<tr><td></td><td><a href="http://www.chromeexperiments.com/detail/geometric-photo-filter/" target="_blank"><img src="chrome_exp.png" align=right border=0></a></td></tr>
+<tr><td class=title width=100% style="white-space: nowrap;">GEOMETRIC <fx style="color:#804000">//</fx> PHOTO FILTER <fx style="color:#F08000">/  /    /</fx> <fx style="color:#B0B0B0; font-size:15pt;">exporting PNG, GIF, SVG</fx></td><td align=right style="white-space: nowrap;">© 2014-15 <a target="_blank" href="http://Zd3N.com">Zden</a> | <a target="_blank" href="http://satori.sk">Satori SK</a> | <a target="_blank" href="http://github.org/zden/face.haluska.sk">source</a><br>ver. 1.20 | March 2015 | <a href="changelog.md" target="_blank">changelog</a></td></tr>
 </table>
 <script src="filesave/Blob.js"></script>
 <script src="filesave/FileSaver.js"></script>
@@ -62,9 +61,11 @@ td.title {
 	text-decoration: none;
 }
 
-#holder { border: 2px dashed #ccc; border-color: #BBE0FA; width: 640px; height: 640px; margin: 20px auto; position: absolute; top: 48px; left: 440px; }
+#holder { border: 2px dashed #ccc; border-color: #BBE0FA; width: 640px; height: 640px; margin: 20px auto; position: absolute; top: 48px; left: 440px; z-index:3; }
 #holder.hover { border: 2px dashed #333; }
 #holder.paint { border: 2px; }
+#holder_bcg { border: 2px; width: 640px; height: 640px; margin: 20px auto; position: absolute; top: 48px; left: 440px; z-index: 1; visibility: hidden; }
+#holder_img { border: 2px; width: 640px; height: 640px; margin: 20px auto; position: absolute; top: 48px; left: 440px; z-index: 3; visibility: hidden; }
 
 #video_capture {
     width: 640px;
@@ -97,7 +98,7 @@ a:hover {
   <p><form>
 	<table background="bgui.gif" width=220>
 	<tr><td>
-	<table width=420><tr><td width=210><input style="width: 130px;" id='save' type='button' value="&#9658; SAVE PAINTING" onclick=button_change(this) /></td><td>Name:</td><td><input id="filename" type="string" value="myface" size="8" onchange=value_change(this) /></td>
+	<table width=420><tr><td width=210><input style="width: 130px;" id='save' type='button' value="&#9658; SAVE PAINTING" onclick=button_change(this) /></td><td>Name:</td><td><input id="filename" type="string" value="myface" size="8" /></td>
 	<td width=210 align=right><input style="width: 80px;" id='play' type='button' value="&#9658; PAUSE" onclick=button_change(this) />&nbsp;&nbsp;&nbsp;</td></tr>
 	</table>
 	<table width=420><!--<tr><td width=150><input style="width: 130px;" id='save_svg' type='button' value="&#9658; SAVE VECTORS" onclick=button_change(this) /></td><td width=120>Record Vectors:</td><td width=150><input id="record_vectors" type="checkbox" value="0" onchange=value_change(this) /></td></tr>-->
@@ -134,6 +135,9 @@ a:hover {
 		</tr>
 	<tr><td>Filled Shader:</td><td><input id="shader_filled" type="checkbox" value="0" onchange=value_change(this) /></td><td></td><td></td><tr>
 	<tr><td>Alfa:</td><td><input id="alfa" type="range" min="0" max="100" value="100" onchange=value_change(this) /></td><td><input style="width:64px;" id="alfa_num" type="number" min="0" max="100" value="100" onchange=value_change(this) /></td></tr>	
+	<tr><td>Shape Precision:</td><td><input id="shape_precision" type="range" min="0" max="100" value="100" onchange=value_change(this) /></td><td><input style="width:64px;" id="shape_precision_num" type="number" min="0" max="100" value="100" onchange=value_change(this) /></td></tr>	
+	<tr><td>No Overlap:</td><td><input id="no_overlap" type="checkbox" value="0" onchange=value_change(this) /></td><td></td><td></td><tr>
+	<tr><td>Allow Inside:</td><td><input id="allow_inside" type="checkbox" value="0" onchange=value_change(this) /></td><td></td><td></td><tr>
 	<tr><td colspan=4></td></tr>
 	<tr><td bgcolor="#EED000" colspan=4></td></tr>
 	<tr><td colspan=4></td></tr>
@@ -174,7 +178,7 @@ a:hover {
 	<tr><td colspan=4></td></tr>
 	<tr><td bgcolor="#EEE000" colspan=4></td></tr>
 	<tr><td colspan=4></td></tr>
-	<tr><td>Steps per Frame: <fx style="color:#F02020; font-size: 8pt;"></fx></td><td><input id="steps" type="range" min="1" max="256" value="10" onchange=value_change(this) /></td><td><input style="width:64px;" id="steps_num" type="number" min="1" max="256" value="10" onchange=value_change(this) /></td></tr>
+	<tr><td>Steps per Frame: <fx style="color:#F02020; font-size: 8pt;"></fx></td><td><input id="steps" type="range" min="1" max="1024" value="10" onchange=value_change(this) /></td><td><input style="width:64px;" id="steps_num" type="number" min="1" max="1024" value="10" onchange=value_change(this) /></td></tr>
 	<tr><td>Max Steps per Walk: <fx style="color:#F02020; font-size: 8pt;"></fx></td><td><input id="walk_steps" type="range" min="2" max="256" value="10" onchange=value_change(this) /></td><td><input style="width:64px;" id="walk_steps_num" type="number" min="2" max="256" value="10" onchange=value_change(this) /></td></tr>
 	<tr><td colspan=4><fx style="color:#F07000; font-size: 8pt;"> Supporting WebWorkers. Higher values may slow down painting but will not brick your browser.</fx>
 	<tr><td colspan=4></td></tr>
@@ -216,6 +220,7 @@ a:hover {
 		<option>White Canvas</option>
 		<option>Black Canvas</option>
 		<option style="background-color:orange" id="canvas_color_option">Custom Color</option>
+		<option>Transparent</option>
 	</td><td></td></tr>
 	<tr><td width=150>Custom Color:</td><td width=190><input id="canvas_color" type="string" value="orange" size="9" onchange=value_change(this) /></td><td style="background-color:orange;" id="canvas_color_td" width=70></td><td width=10></td></tr>
 	<tr><td colspan=4><fx style="color:#808080; font-size: 8pt;">Color by English name or RGB value in hexadecimal.</fx>
@@ -246,7 +251,9 @@ a:hover {
 	<label for="upload" class="uploadButton">[&nbsp;upload&nbsp;image&nbsp;]</label>
 	<input style="opacity:0" type="file" name="upload" id="upload">
 	</div>
+  <div id="holder_bcg"><canvas id='bcg' width=640 height=640 style='position:relative;'></canvas></div>
   <div id="holder"><canvas id='face' width=640 height=640 style='position:relative;'></canvas></div>
+  <div id="holder_img"><canvas id='img' width=640 height=640 style='position:relative;'></canvas></div>
   <div id="video_div"><video autoplay="" id="video_capture">
   
   </video></div>
@@ -254,11 +261,14 @@ a:hover {
 <script>
 
 var val_canvas_color = new RGB(0xff, 0x80, 0x00);
-var val_start_canvas = 0;
+var val_start_canvas = 0, CANVAS_WHITE = 0, CANVAS_BLACK = 1, CANVAS_CUSTOM = 2, CANVAS_TRANSPARENT = 3;
 var val_shader = 0;
 var val_shader_filled = 1;
+var val_no_overlap = 0;
+var val_allow_inside = 0;
 var val_pixel_start_dist = 8, val_pixel_dist = 64;
 var val_pixel_similiar = 2;
+var val_shape_precision = 0;
 var val_angle_start = 0, val_angle_start_rand = 359, val_arc_length = 360;
 var val_alfa = 100;
 var val_alfa_end = 100;
@@ -267,14 +277,12 @@ var val_line_width = 1;
 var val_line_cap = 1;
 var val_hue = 0;
 var val_saturation = 128;
-var val_dist_fade = 100;
+var val_dist_fade = 0; //100;
 var val_inverted_fade = 0;
 var val_steps = 10;
 var val_walk_steps = 10;
 var val_play = 1, val_orig = 0;
 var val_vectors = 1;
-var painting_snap = 0;
-var painting_refresh = 0;
 var painting_restart = 0;
 
 var gif_frames = 0;
@@ -283,7 +291,6 @@ var val_gif_auto = 0;
 var val_gif_auto_period = 50;
 var val_gif_time = 25;
 var val_gif_loop = 1;
-var val_gif_trans = 1;
 var val_gif_res = 0;
 var val_gif_scale = 25;
 var val_gif_wid = 32;
@@ -335,8 +342,6 @@ function painting_start()
 {
 	val_orig = 0; val_play = 1;
 	button_refresh('play');
-	painting_snap = painting_refresh = 0;
-	img_painting_loaded = 0;
 	button_refresh('play');
 	button_refresh('orig');
 	value_enable('play', 1);
@@ -347,7 +352,9 @@ function painting_start()
 	value_enable('gif_frame', 1);
 	value_enable('gif_set', 1);
 	gif_auto_cnt = 0;
-	svgz_start(x_res, y_res);
+	svgz_start(x_res, y_res, filename);
+	worker.postMessage({cmd:'start_paint'});
+	painting_restart = 1;
 }
 
 var SHADER_LINE = 0;
@@ -394,12 +401,14 @@ function value_range(val, min, max)
 
 var img_original;
 var img_painting;
-var img_painting_loaded;
 
 var preset_data = [
 [ "val_shader" ],
 [ "val_shader_filled" ],
 [ "val_alfa" ],
+[ "val_shape_precision" ],
+[ "val_no_overlap" ],
+[ "val_allow_inside" ],
 [ "val_line_width" ],
 [ "val_line_cap" ],
 [ "val_gradient" ],
@@ -454,10 +463,11 @@ function update_controls()
 	value_set('walk_steps_num', val_walk_steps);
 	change_shader(val_shader);
 	check_set('shader_filled', val_shader_filled);
+	value_set('shape_precision', val_shape_precision);
+	value_set('shape_precision_num', val_shape_precision);
 	
 	value_set('gif_frames', gif_frames);
 	check_set('gif_loop', val_gif_loop);
-//	check_set('gif_trans', val_gif_trans);
 	value_set('gif_time', val_gif_time);
 	value_set('gif_scale', val_gif_scale);
 	value_set('gif_wid', val_gif_wid);
@@ -465,8 +475,11 @@ function update_controls()
 	check_set('gif_auto', val_gif_auto);
 	combo_set('gif_res', val_gif_res);
 	value_set('gif_auto_period', val_gif_auto_period);
-	
+
 	check_set('record_vectors', val_vectors);
+
+	check_set('no_overlap', val_no_overlap);
+	check_set('allow_inside', val_allow_inside);
 
 	refresh_enabled();
 }
@@ -516,33 +529,43 @@ function preset_load(str)
 	update_controls();
 }
 
-function snap_painting(canvas)
+function filename_get()
 {
-	img_painting_loaded = 0;
-	img_painting = new Image();
-	img_painting.src = canvas.toDataURL("image/raw");
-	img_painting.onload = function func() { img_painting_loaded = 1; };
+	filename = value_get('filename');
 }
 
 function save_painting(canvas)
 {
-//	var img = canvas.toDataURL("image/png");
-//	window.open(img);
-	canvas.toBlob(function(blob) { saveAs(blob, filename + ".png"); }, "image/png");
+	filename_get();
+
+	if (val_start_canvas == CANVAS_TRANSPARENT)
+		canvas.toBlob(function(blob) { saveAs(blob, filename + ".png"); }, "image/png");
+	else
+	{
+		context_bcg.drawImage(canvas, 0, 0, x_res, y_res);
+		canvas_bcg.toBlob(function(blob) { saveAs(blob, filename + ".png"); }, "image/png");
+		background_change(0);
+	}
 }
 
 function save_vectors()
 {
-	var blob = new Blob([ svgz_end() ], { type: "image/svg" } );
+	filename_get();
+
+	var blob = new Blob([ svgz_end(val_start_canvas == CANVAS_TRANSPARENT, (background_color(0)).str) ], { type: "image/svg" } );
 	saveAs(blob, filename + ".svg");
+	/*
+	var blob = new Blob([ svgz_array_end() ], { type: "text/javascript" } );
+	saveAs(blob, filename + ".js");
+	*/
 }
 
 function gif_add_frame()
 {
 	if (!gif_frames) gif_start();
-	var ctx = canvas_gif.getContext('2d');
-	ctx.drawImage(canvas, 0, 0, x_res, y_res, 0, 0, val_gif_wid, val_gif_hei);
-	gif_data = ctx.getImageData(0,0, val_gif_wid, val_gif_hei).data;
+	background_change(1);
+	context_gif.drawImage(canvas, 0, 0, x_res, y_res, 0, 0, val_gif_wid, val_gif_hei);
+	gif_data = context_gif.getImageData(0,0, val_gif_wid, val_gif_hei).data;
 	gif_worker.postMessage({cmd:'frame',frame:gif_data});
 	gif_frames++;
 	value_set('gif_frames', gif_frames);
@@ -566,8 +589,6 @@ function button_change(obj)
 						break;
 
 		case 'orig':
-						if (val_orig && !img_painting_loaded) break;
-
 						val_orig ^= 1;
 
 						button_refresh('orig');
@@ -575,12 +596,11 @@ function button_change(obj)
 						{
 							val_play = 0;
 							button_refresh('play');
-							img_painting_loaded = 0;
-							painting_snap = 1;
 							value_enable('play', 0);
 							value_enable('save', 0);
 							value_enable('save_svg', 0);
 							value_enable('restart', 0);
+							holder_img.style.visibility = "visible";
 						}
 						else
 						{
@@ -588,13 +608,14 @@ function button_change(obj)
 							value_enable('save', 1);
 							value_enable('save_svg', val_vectors ? 1 : 0);
 							value_enable('restart', 1);
-							painting_refresh = 4;
+							holder_img.style.visibility = "hidden";
 						}
 						break;
 
 		case 'restart':
 						painting_restart = 1;
-						svgz_start(x_res, y_res);
+						svgz_start(x_res, y_res, filename);
+						worker.postMessage({cmd:'start_paint'});
 						refresh_enabled();
 						break;
 		case 'gif_frame':
@@ -616,7 +637,7 @@ function combo_change(obj)
 	switch (obj.id)
 	{
 		case 'shader': change_shader( obj.selectedIndex ); break;
-		case 'start' : val_start_canvas = obj.selectedIndex; break;
+		case 'start' : val_start_canvas = obj.selectedIndex; background_change(0); break;
 		case 'line_cap' : val_line_cap = obj.selectedIndex; break;
 		case 'preset' :
 			len = obj.length;
@@ -779,7 +800,7 @@ function value_change(obj)
 
 		case 'steps':
 		case 'steps_num':
-									val = value_range(val, 1, 256);
+									val = value_range(val, 1, 1024);
 									value_set('steps', val);
 									value_set('steps_num', val);
 									val_steps = val;
@@ -795,10 +816,12 @@ function value_change(obj)
 
 		case 'filename':
 									filename = obj.value;
+									break;
 		case 'canvas_color':
 									(document.getElementById('canvas_color_td')).style.backgroundColor = obj.value;
 									val_canvas_color.str = (document.getElementById('canvas_color_td')).style.backgroundColor;
 									(document.getElementById('canvas_color_option')).style.backgroundColor = val_canvas_color.str;
+									background_change(0);
 									break;
 
 		case 'gif_time':
@@ -827,9 +850,6 @@ function value_change(obj)
 									val_gif_loop = Math.floor( obj.checked );
 									gif_params();
 									break;
-		case 'gif_trans':
-									val_gif_trans = Math.floor( obj.checked );
-									break;
 		case 'gif_auto':
 									val_gif_auto = Math.floor( obj.checked );
 									refresh_enabled();
@@ -843,11 +863,27 @@ function value_change(obj)
 									val_vectors = Math.floor ( obj.checked );
 									refresh_enabled();
 									break;
+		case 'no_overlap':
+									val_no_overlap = Math.floor ( obj.checked );
+									break;
+		case 'allow_inside':
+									val_allow_inside = Math.floor ( obj.checked );
+									break;
+
+		case 'shape_precision':
+		case 'shape_precision_num':
+									val = value_range(val, 0, 100);
+									value_set("shape_precision", val);
+									value_set("shape_precision_num", val);
+									val_shape_precision = val;
+									break;
 	}
 
 }
 
 var holder = document.getElementById('holder');
+var holder_bcg = document.getElementById('holder_bcg');
+var holder_img = document.getElementById('holder_img');
 
 if (typeof window.FileReader === 'undefined')
 	alert("File API & FileReader is not available.\nYou can't drag and drop images to process filter.");
@@ -864,7 +900,7 @@ function line_s(con_, xs, ys, xe, ye, col, alfa, stroke)
 	con_.stroke();
 }
 	
-function line(con_, xs, ys, xe, ye, col, col_end, alfa, alfa_end, stroke, cap, grad)
+function line(con_, xs, ys, xe, ye, col, col_end, alfa, alfa_end, stroke, cap, grad, ignore)
 {
 	var cap_str = !cap ? "butt" : cap == 1 ? "round" : "square";
 
@@ -931,7 +967,9 @@ function circle(con_, x, y, r, filled, col, col_end, alfa, alfa_end, stroke, gra
 function triangle(con_, x1, y1, x2, y2, x3, y3, filled, col, col_mid, col_end, alfa, alfa_end, stroke, grad)
 {
 	if (val_vectors)
+	{
 		svgz_triangle(x1, y1, x2, y2, x3, y3, filled, col.str, alfa, stroke);
+	}
 
 	con_.lineWidth = stroke;
 	con_.beginPath();
@@ -963,9 +1001,9 @@ function triangle(con_, x1, y1, x2, y2, x3, y3, filled, col, col_mid, col_end, a
 		}
 		else
 		{
-			line(con_, x1, y1, x2, y2, col, col_mid, alfa, alfa_end, stroke, 1, grad);
-			line(con_, x2, y2, x3, y3, col_mid, col_end, alfa, alfa_end, stroke, 1, grad);
-			line(con_, x3, y3, x1, y1, col_end, col, alfa, alfa_end, stroke, 1, grad);
+			line(con_, x1, y1, x2, y2, col, col_mid, alfa, alfa_end, stroke, 1, grad, 1);
+			line(con_, x2, y2, x3, y3, col_mid, col_end, alfa, alfa_end, stroke, 1, grad, 1);
+			line(con_, x3, y3, x1, y1, col_end, col, alfa, alfa_end, stroke, 1, grad, 1);
 		}
 	}
 	else
@@ -981,17 +1019,17 @@ function triangle(con_, x1, y1, x2, y2, x3, y3, filled, col, col_mid, col_end, a
 	}
 }
 
-function rect(con_, x1, y1, wid, hei, filled, col, col_end, alfa, alfa_end, stroke, grad)
+function rect(con_, x1, y1, wid, hei, filled, col, col_end, alfa, alfa_end, stroke, grad, ignore)
 {
-	if (val_vectors)
+	if (val_vectors && !ignore)
 		svgz_rect(x1, y1, wid, hei, filled, col.str, alfa, stroke);
 
 	if (grad && !filled)
 	{
-		line(con_, x1, y1, x1+wid, y1, col, col_end, alfa, alfa_end, stroke, val_line_cap, 1);
-		line(con_, x1+wid, y1, x1+wid, y1+hei, col_end, col, alfa, alfa_end, stroke, val_line_cap, 1);
-		line(con_, x1+wid, y1+hei, x1, y1+hei, col, col_end, alfa, alfa_end, stroke, val_line_cap, 1);
-		line(con_, x1, y1+hei, x1, y1, col_end, col, alfa, alfa_end, stroke, val_line_cap, 1);
+		line(con_, x1, y1, x1+wid, y1, col, col_end, alfa, alfa_end, stroke, val_line_cap, 1, 1);
+		line(con_, x1+wid, y1, x1+wid, y1+hei, col_end, col, alfa, alfa_end, stroke, val_line_cap, 1, 1);
+		line(con_, x1+wid, y1+hei, x1, y1+hei, col, col_end, alfa, alfa_end, stroke, val_line_cap, 1, 1);
+		line(con_, x1, y1+hei, x1, y1, col_end, col, alfa, alfa_end, stroke, val_line_cap, 1, 1);
 		
 		return;
 	}
@@ -1133,18 +1171,7 @@ var gif_encoder;
 var img_data;
 var col_white = new RGB ( 255, 255, 255 );
 var col_black = new RGB ( 0, 0, 0 );
-
-var DVAPI = 2*Math.PI;
-
-function get_alfa(dist)
-{
-	var alfa = (0.01 + dist - val_pixel_start_dist ) / ( val_pixel_dist - val_pixel_start_dist );
-	if (!val_inverted_fade) alfa = 1 - alfa;
-	alfa = (val_alfa * alfa) / 100;
-	alfa = ( val_alfa * (100 - val_dist_fade) ) / (100*100) + ( alfa * val_dist_fade ) / 100;
-
-	return (alfa);
-}
+var col_page = new RGB ( 0xEF, 0xED, 0xE7 );
 
 // ---------- gif worker ----------
 
@@ -1203,7 +1230,7 @@ worker.addEventListener('message', function(e) {
 			for (a = 0; a < c; a++)
 			{
 				p = d[a];
-				line(context, p.x, p.y, p.xx, p.yy, hue_satur(p.col), hue_satur(p.col_end), p.alfa, val_alfa_end, val_line_width, val_line_cap, val_gradient);
+				line(context, p.x, p.y, p.xx, p.yy, hue_satur(p.col), hue_satur(p.col_end), p.alfa, val_alfa_end, val_line_width, val_line_cap, val_gradient, 0);
 			}
 			break;
 		case SHADER_TRIANGLE:
@@ -1224,7 +1251,7 @@ worker.addEventListener('message', function(e) {
 			for (a = 0; a < c; a++)
 			{
 				p = d[a];
-				rect(context, p.x, p.y, p.xx, p.yy, val_shader_filled, hue_satur(p.col), hue_satur(p.col_end), p.alfa, val_alfa_end, val_line_width, val_gradient);
+				rect(context, p.x, p.y, p.xx, p.yy, val_shader_filled, hue_satur(p.col), hue_satur(p.col_end), p.alfa, val_alfa_end, val_line_width, val_gradient, 0);
 			}
 			break;
 	}
@@ -1239,6 +1266,38 @@ var favicon_refresh_count = 0;
 
 var gif_auto_cnt = 0;
 
+function background_color(type)
+{
+	var col;
+
+	switch (val_start_canvas)
+	{
+		case CANVAS_WHITE: col = col_white; break;
+		case CANVAS_BLACK: col = col_black; break;
+		case CANVAS_CUSTOM: col = val_canvas_color; break;
+		case CANVAS_TRANSPARENT: col = !type ? col_page : col_white; break;
+	}
+
+	return col;
+}
+
+function background_change(type)
+{
+	var col;
+	var cnt, wid, hei;
+
+	switch (type)
+	{
+		case 0: cnt = context_bcg; wid = x_res; hei = y_res; break;
+		case 1: cnt = context_gif; wid = val_gif_wid; hei = val_gif_hei; break;
+	}
+
+	if (!cnt) return;
+
+	col = background_color(type);
+	rect(cnt, 0, 0, wid, hei, 1, col, col, 1, 1, 0, 0, 1);
+}
+
 function animate_paint(canvas, context)
 {
 	var a, c, x, y, p;
@@ -1247,40 +1306,29 @@ function animate_paint(canvas, context)
 	var ang_s, ang_e, found;
 	var alfa;
 
-	if (painting_refresh)
-	{
-		//rect(context, 0, 0, x_res, y_res, 1, col_white, 1);
-		painting_refresh = 0;
-		context.globalAlpha = 1;
-		context.drawImage(img_painting, 0, 0, x_res, y_res);
-	}
-
 	if (painting_restart && !worker_called)
 	{
 		painting_restart = 0;
-		rect(context, 0, 0, x_res, y_res, 1, val_start_canvas == 2 ? val_canvas_color : !val_start_canvas ? col_white : col_black, col_black, 1, 1, 0);
+		background_change(0);
+		context.clearRect(0, 0, x_res, y_res);
 	}
 
 	got_data = 0;
 
 	if (val_play && !worker_called)
 	{
-		worker.postMessage({cmd:'do',val_steps:val_steps,val_walk_steps:val_walk_steps,val_shader:val_shader,val_alfa:val_alfa,
+		worker.postMessage({cmd:'do',val_steps:val_steps,val_walk_steps:val_walk_steps,val_shader:val_shader,val_shape_precision:val_shape_precision,val_alfa:val_alfa,
 														val_pixel_start_dist:val_pixel_start_dist,val_pixel_dist:val_pixel_dist,
 														val_angle_start:val_angle_start, val_angle_start_rand:val_angle_start_rand, val_arc_length:val_arc_length,
-														val_pixel_similiar:val_pixel_similiar,val_inverted_fade:val_inverted_fade,val_dist_fade:val_dist_fade});
+														val_pixel_similiar:val_pixel_similiar,val_inverted_fade:val_inverted_fade,val_dist_fade:val_dist_fade,
+														val_no_overlap, val_allow_inside});
 		worker_called = 1;
 	}
 
-	if (painting_snap)
-	{
-		painting_snap = 0;
-		snap_painting(canvas);
-	}
 	if (val_orig)
 	{
-		context.globalAlpha = 1;
-		context.drawImage(img_original, 0, 0, x_res, y_res);
+		context_img.globalAlpha = 1;
+		context_img.drawImage(img_original, 0, 0, x_res, y_res);
 	}
 
 	if (!favicon_refresh_count)
@@ -1308,11 +1356,36 @@ function animate_paint(canvas, context)
 // ---------- canvas init/resize, grab image data, start filtering ----------
 
 var canvas = 0, context = 0;
-var canvas_gif = 0;
+var canvas_gif = 0, context_gif = 0;
+var canvas_bcg = 0, context_bcg = 0;
+var canvas_img = 0, context_img = 0;
+
+function resize_canvas(cnv, hld)
+{
+	hld.style.width = x_res+"px";
+	hld.style.height = y_res+"px";
+	cnv.width = x_res;
+	cnv.height = y_res;
+	cnv.style.width = x_res+"px";
+	cnv.style.height = y_res+"px";
+}
+
 function paint(face_img, video)
 {
-	if (!canvas) { canvas = document.getElementById('face'); canvas_gif = document.getElementById('gif'); }
-	if (!context) context = canvas.getContext('2d');
+	if (!canvas)
+	{
+		canvas = document.getElementById('face');
+		canvas_gif = document.getElementById('gif');
+		canvas_bcg = document.getElementById('bcg');
+		canvas_img = document.getElementById('img');
+	}
+	if (!context)
+	{
+		context = canvas.getContext('2d');
+		context_gif = canvas_gif.getContext('2d');
+		context_bcg = canvas_bcg.getContext('2d');
+		context_img = canvas_img.getContext('2d');
+	}
 
 	var wid, hei;
 	
@@ -1352,12 +1425,11 @@ function paint(face_img, video)
 	
 	
 	holder.className = 'paint';
-	holder.style.width = x_res+"px";
-	holder.style.height = y_res+"px";
-	canvas.width = x_res;
-	canvas.height = y_res;
-	canvas.style.width = x_res+"px";
-	canvas.style.height = y_res+"px";
+	resize_canvas(canvas, holder);
+	resize_canvas(canvas_bcg, holder_bcg);
+	resize_canvas(canvas_img, holder_img);
+	holder_bcg.style.visibility = "visible";
+	holder_img.style.visibility = "visible";
 
 	video = document.getElementById('video_capture');
 	video.style.width = x_res+"px";
@@ -1383,7 +1455,7 @@ function paint(face_img, video)
 		video_div.style.visibility = "hidden";
 	}
 
-	rect(context, 0, 0, x_res, y_res, 1, val_start_canvas == 2 ? val_canvas_color : !val_start_canvas ? col_white : col_black, col_black, 1, 1, 0);
+	rect(context, 0, 0, x_res, y_res, 1, val_start_canvas == 2 ? val_canvas_color : !val_start_canvas ? col_white : col_black, col_black, 1, 1, 0, 0, 1);
 
 	painting_start();
 
@@ -1643,7 +1715,7 @@ function gif_params()
 
 function gif_start()
 {
-	gif_worker.postMessage({cmd:'start',loop:val_gif_loop,time:val_gif_time,wid:val_gif_wid,hei:val_gif_hei/*,trans:val_gif_trans,trans_color:tc*/});
+	gif_worker.postMessage({cmd:'start',loop:val_gif_loop,time:val_gif_time,wid:val_gif_wid,hei:val_gif_hei,trans: val_start_canvas == CANVAS_TRANSPARENT,trans_color:0xffffff});
 	gif_frames = 0;
 	value_set('gif_frames', gif_frames);
 }
