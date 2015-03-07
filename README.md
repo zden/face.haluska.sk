@@ -1,6 +1,6 @@
 face.haluska.sk | FACE FILTER | source release
 
-Geometric Photo Filter - Now Powered by GIF
+Geometric Photo Filter - Exporting PNG, GIF, SVG
 
 This filter performs best on high detailed portrait pictures.
 ______________________________________________________________________________________________________
@@ -15,7 +15,7 @@ for the same color starting again from the newly found pixel.
 ______________________________________________________________________________________________________
 
 (c) Zden Hlinka | Satori, s.r.o.
-developed in Jun-July 2014
+developed in 2014-2015
 ______________________________________________________________________________________________________
 
 V.1.15 introduces GIF creator and starts to include sources from other authors:
